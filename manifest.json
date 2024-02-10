@@ -6,7 +6,10 @@
   "content_scripts": [
     {
       "js": ["src/content.tsx"],
-      "matches": ["https://www.google.com/*"]
+      "matches": [
+        "https://www.google.com/*", 
+        "https://online.simplii.com/*"
+      ]
     }
   ]
 }
