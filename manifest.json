@@ -10,6 +10,12 @@
         "https://www.google.com/*", 
         "https://online.simplii.com/*"
       ]
+    },
+    {
+      "js": ["src/simplii/content.tsx"],
+      "matches": [
+        "https://online.simplii.com/*"
+      ]
     }
   ]
 }
