@@ -1,3 +1,5 @@
+import { querySelectText } from "../utils";
+
 console.log("credit card Account")
 
 interface StatementData {
@@ -24,10 +26,9 @@ function parseFinancialData(): FinancialData {
 
   const creditDetailsList = creditDetailsSection.querySelectorAll('li');
 
-
-  creditDetailsList.forEach((item: Element) => {
-      const label = item.querySelector('.detail-label')?.textContent?.trim() || '';
-      const value = item.querySelector('.align-right span')?.textContent?.trim() || '';
+  creditDetailsList.forEach((row: Element) => {
+      const label = querySelectText(row,'.detail-label');
+      const value = querySelectText(row,'.align-right span');
 
       // Remove any non-numeric characters from the value and parse it as a float
       const numericValue = parseFloat(value.replace(/[^\d.-]/g, ''));
@@ -49,10 +50,9 @@ function parseStatementDetails(): StatementData {
 
   const statementDetailsList = statementDetailsSection.querySelectorAll('li');
 
-
-  statementDetailsList.forEach((item: Element) => {
-      const label: string = item.querySelector('.detail-label')?.textContent?.trim() || '';
-      const value: string = item.querySelector('.align-right')?.textContent?.trim() || '';
+  statementDetailsList.forEach((row: Element) => {
+      const label = querySelectText(row, '.detail-label');
+      const value = querySelectText(row, '.align-right');
 
       statementData[label] = value;
   });

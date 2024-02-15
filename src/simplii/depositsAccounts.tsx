@@ -1,3 +1,5 @@
+import { querySelectText } from "../utils";
+
 interface FinancialInfo {
   balance: number;
   availableFunds: number;
@@ -25,22 +27,19 @@ function getTombstoneText(
   divIdx: number,
   spanIdx: number
 ): string {
-  return (
-    document
-      .querySelector(
-        `.tombstone .box-medium:nth-of-type(${boxIdx}) div:nth-of-type(${divIdx}) span:nth-child(${spanIdx})`
-      )
-      ?.textContent?.trim() || ""
+  return querySelectText(
+    document,
+    `.tombstone .box-medium:nth-of-type(${boxIdx}) div:nth-of-type(${divIdx}) span:nth-child(${spanIdx})`
   );
 }
 
 function getTombStoneSmallBoxText(boxIdx: number): string {
   // trim text and remove non-numeric characters
   return (
-    document
-      .querySelector(`.tombstone .box-small:nth-child(${boxIdx}) em`)
-      ?.textContent?.trim()
-      ?.replace(/[^0-9.-]+/g, "") || "0"
+    querySelectText(
+      document,
+      `.tombstone .box-small:nth-child(${boxIdx}) em`
+    )?.replace(/[^0-9.-]+/g, "") || "0"
   );
 }
 
@@ -61,22 +60,17 @@ export function parseFinancialInfo(): FinancialInfo {
 // const financialInfo = parseFinancialInfo();
 // console.log(financialInfo);
 
-
 export function getDepAccountTransactions(): TransactionData {
   const transactionRows = document.querySelectorAll("tr.transaction-row");
   const transactions = new Array<any>();
 
   transactionRows.forEach((row) => {
-    const date = row.querySelector(".date")?.textContent?.trim();
-    const location = row
-      .querySelector(".transactionLocation")
-      ?.textContent?.trim();
-    const description = row
-      .querySelector(".transactionDescription")
-      ?.textContent?.trim();
-    const debit = row.querySelector(".debit span")?.textContent?.trim();
-    const credit = row.querySelector(".credit span")?.textContent?.trim();
-    const balance = row.querySelector(".balance span")?.textContent?.trim();
+    const date = querySelectText(row, ".date");
+    const location = querySelectText(row, ".transactionLocation");
+    const description = querySelectText(row, ".transactionDescription");
+    const debit = querySelectText(row, ".debit span");
+    const credit = querySelectText(row, ".credit span");
+    const balance = querySelectText(row, ".balance span");
 
     transactions.push({
       date: date,
