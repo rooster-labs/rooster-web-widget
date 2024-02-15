@@ -9,7 +9,22 @@ interface FinancialInfo {
   accountNumber: string;
 }
 
-function getTombstoneText(boxIdx: number, divIdx: number, spanIdx: number): string {
+interface Transactions {
+  date: string;
+  location: string;
+  description: string;
+  debit: string;
+  credit: string;
+  balance: string;
+}
+
+type TransactionData = Array<Transactions>;
+
+function getTombstoneText(
+  boxIdx: number,
+  divIdx: number,
+  spanIdx: number
+): string {
   return (
     document
       .querySelector(
@@ -46,9 +61,32 @@ export function parseFinancialInfo(): FinancialInfo {
 // const financialInfo = parseFinancialInfo();
 // console.log(financialInfo);
 
-export function getDepAccountTransactions() {
+
+export function getDepAccountTransactions(): TransactionData {
   const transactionRows = document.querySelectorAll("tr.transaction-row");
-  const transactions = new Array<string>();
-  transactionRows.forEach((node) => transactions.push(node.innerHTML));
-  return transactions
+  const transactions = new Array<any>();
+
+  transactionRows.forEach((row) => {
+    const date = row.querySelector(".date")?.textContent?.trim();
+    const location = row
+      .querySelector(".transactionLocation")
+      ?.textContent?.trim();
+    const description = row
+      .querySelector(".transactionDescription")
+      ?.textContent?.trim();
+    const debit = row.querySelector(".debit span")?.textContent?.trim();
+    const credit = row.querySelector(".credit span")?.textContent?.trim();
+    const balance = row.querySelector(".balance span")?.textContent?.trim();
+
+    transactions.push({
+      date: date,
+      location: location,
+      description: description,
+      debit: debit,
+      credit: credit,
+      balance: balance,
+    });
+  });
+
+  return transactions;
 }
