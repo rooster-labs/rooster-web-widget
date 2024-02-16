@@ -16,6 +16,12 @@
       "matches": [
         "https://online.simplii.com/*"
       ]
+    },
+    {
+      "js": ["src/questrade/content.tsx"],
+      "matches": [
+        "https://my.questrade.com/clients/en/my_home"
+      ]
     }
   ]
 }
