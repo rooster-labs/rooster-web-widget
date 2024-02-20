@@ -22,6 +22,10 @@
       "matches": [
         "https://my.questrade.com/clients/en/my_home"
       ]
+    },
+    {
+      "js": ["src/tangerine/content.tsx"],
+      "matches": ["https://www.tangerine.ca/app/*"]
     }
   ]
 }
