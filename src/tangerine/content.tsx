@@ -7,12 +7,10 @@ interface AccountSummary {
 
 type AccountSummaryList = Array<AccountSummary>;
 
-function parseAccountSummary() {
+function parseAccountSummary(): AccountSummaryList {
   const accountSummaryList = new Array<AccountSummary>();
   const tangerineAccounts = document.querySelector(".tangerine-accounts");
   const accountRows = tangerineAccounts?.querySelectorAll(".desktop-container");
-
-  // ".tangerine-accounts .account-info span:nth-child(2)")
 
   accountRows?.forEach((row) => {
     accountSummaryList.push({
@@ -31,7 +29,7 @@ function onLoad() {
   setTimeout(() => {
     console.log("Tangerine Summary Page");
     console.log(parseAccountSummary());
-  }, 10000);
+  }, 2000);
 }
 
 onLoad();
