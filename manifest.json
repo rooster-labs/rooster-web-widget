@@ -2,7 +2,12 @@
   "manifest_version": 3,
   "name": "Rooster Financial",
   "version": "1.0.0",
+  "permissions": [ "storage" ],
   "action": { "default_popup": "index.html" },
+  "background": {
+    "service_worker": "src/scripts/background.ts",
+    "type": "module"
+  },
   "content_scripts": [
     {
       "js": ["src/content.tsx"],

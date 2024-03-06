@@ -33,4 +33,15 @@ function onLoad() {
   }, 10000);
 }
 
+
+
+async function printData() {
+  // Print all stored data
+  chrome.storage.local.get(null, (data) => {
+    console.log("Stored data:", data);
+  });
+}
+
 onLoad();
+
+printData()
