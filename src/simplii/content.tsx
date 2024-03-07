@@ -1,4 +1,4 @@
-import { parseAccountSummary } from "./accountSummary";
+import { parseAccountSummary, createSimpliiProduct } from "./accountSummary";
 import parseCreditCardDetails from "./creditCardsAccounts";
 import {
   getDepAccountTransactions,
@@ -27,7 +27,9 @@ function locationHashChanged() {
     } else {
       setTimeout(() => {
         console.log("Simplii Summary Page");
-        console.log(parseAccountSummary());
+        const simpliiSummaryData = createSimpliiProduct();
+        chrome.storage.local.set({simplii: simpliiSummaryData});
+        console.log(simpliiSummaryData);
       }, 2000);
     }
   }
