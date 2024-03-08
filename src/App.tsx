@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import "./App.css";
+import { Product, ProductsData, calcNetWorth } from "./data/Accounts";
 
 function App() {
-  const [products, setProductsData] = useState<Product>();
+  const [products, setProductsData] = useState<ProductsData>();
 
   useEffect(() => {
     chrome.storage.local.get(null, (data) => {
@@ -11,25 +12,10 @@ function App() {
     });
   }, []);
 
-  const totalValue = () => {
-    let sum = 0;
-    if (products) {
-      Object.values(products).flatMap((product) => {
-        product?.accounts?.map((account) => {
-          console.log(account.balance, typeof account.balance);
-
-          sum += account.balance;
-        });
-      });
-    }
-
-    return sum;
-  };
-
   return (
     <div className="App">
       <h1>Rooster</h1>
-      <h2>Net Worth: {totalValue()}</h2>
+      <h2>Net Worth: {calcNetWorth(products)}</h2>
       <p>
         {products
           ? Object.values(products).flatMap((product) => {

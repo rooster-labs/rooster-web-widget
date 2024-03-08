@@ -1,7 +1,5 @@
 import { querySelectText } from "../utils";
 
-console.log("credit card Account")
-
 interface StatementData {
   [label: string]: string | number;
 }
@@ -17,23 +15,23 @@ export interface CreditCardDetails {
 
 function parseFinancialData(): FinancialData {
   const financialData: FinancialData = {};
-  const creditDetailsSection = document.querySelector('.credit-details');
+  const creditDetailsSection = document.querySelector(".credit-details");
 
   if (!creditDetailsSection) {
-    console.log('Credit details section not found');
-    return financialData
+    console.log("Credit details section not found");
+    return financialData;
   }
 
-  const creditDetailsList = creditDetailsSection.querySelectorAll('li');
+  const creditDetailsList = creditDetailsSection.querySelectorAll("li");
 
   creditDetailsList.forEach((row: Element) => {
-      const label = querySelectText(row,'.detail-label');
-      const value = querySelectText(row,'.align-right span');
+    const label = querySelectText(row, ".detail-label");
+    const value = querySelectText(row, ".align-right span");
 
-      // Remove any non-numeric characters from the value and parse it as a float
-      const numericValue = parseFloat(value.replace(/[^\d.-]/g, ''));
+    // Remove any non-numeric characters from the value and parse it as a float
+    const numericValue = parseFloat(value.replace(/[^\d.-]/g, ""));
 
-      financialData[label] = numericValue;
+    financialData[label] = numericValue;
   });
 
   return financialData;
@@ -41,36 +39,33 @@ function parseFinancialData(): FinancialData {
 
 function parseStatementDetails(): StatementData {
   const statementData: StatementData = {};
-  const statementDetailsSection = document.querySelector('.statement-details');
+  const statementDetailsSection = document.querySelector(".statement-details");
 
   if (!statementDetailsSection) {
-      console.log('Statement details section not found');
-      return statementData
+    console.log("Statement details section not found");
+    return statementData;
   }
 
-  const statementDetailsList = statementDetailsSection.querySelectorAll('li');
+  const statementDetailsList = statementDetailsSection.querySelectorAll("li");
 
   statementDetailsList.forEach((row: Element) => {
-      const label = querySelectText(row, '.detail-label');
-      const value = querySelectText(row, '.align-right');
+    const label = querySelectText(row, ".detail-label");
+    const value = querySelectText(row, ".align-right");
 
-      statementData[label] = value;
+    statementData[label] = value;
   });
 
   return statementData;
 }
 
-export default function parseCreditCardDetails(): CreditCardDetails {
+function parseCreditCardDetails(): CreditCardDetails {
   return {
     creditDetails: parseFinancialData(),
-    statementDetails: parseStatementDetails()
+    statementDetails: parseStatementDetails(),
   };
 }
 
-// try {
-//   const statementData: StatementData = parseStatementDetails();
-//   console.log(statementData);
-// } catch (error) {
-//   console.error(error);
-// }
-
+export function logCreditCardData() {
+  console.log("credit cards");
+  console.log(parseCreditCardDetails());
+}

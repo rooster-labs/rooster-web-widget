@@ -1,6 +1,6 @@
 import { querySelectNumber, querySelectText } from "../utils";
 
-export function parseAccountSummary(): Account[] {
+function parseAccountSummary(): Account[] {
   const accountSummaryList = new Array<Account>();
   const allAccounts = [
     document.querySelectorAll(".items__list table.DEPOSIT tr.ember-view"),
@@ -22,7 +22,7 @@ export function parseAccountSummary(): Account[] {
   return accountSummaryList;
 }
 
-export function createSimpliiProduct(): Product {
+function createSimpliiProduct(): Product {
   return {
     name: "Simplii",
     type: "bank",
@@ -30,11 +30,9 @@ export function createSimpliiProduct(): Product {
   };
 }
 
-function onLoad() {
-  setTimeout(() => {
-    console.log("Simplii Summary Page");
-    console.log(parseAccountSummary());
-  }, 2000);
+export function logAccountSummary() {
+  console.log("Simplii Summary Page");
+  const simpliiSummaryData = createSimpliiProduct();
+  chrome.storage.local.set({ simplii: simpliiSummaryData });
+  console.log(simpliiSummaryData);
 }
-
-onLoad();
