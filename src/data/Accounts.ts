@@ -1,5 +1,4 @@
 import { sumBy } from "lodash";
-import uniq from "lodash/uniq";
 
 export interface ProductsData {
   [key: string]: Product;
@@ -27,4 +26,31 @@ export function calcNetWorth(productData: ProductsData | undefined): number {
   } else {
     return 0;
   }
+}
+
+export function getNetSummaryData(
+  productData: ProductsData | undefined,
+): Array<{ name: string; value: number }> {
+  if (productData) {
+    return Object.values(productData).flatMap((p) =>
+      p.accounts.map((a) => ({
+        name: createLabel(p.name, a.accountName, a.balance),
+        value: a.balance,
+      }))
+    ).sort((a, b) => b.value - a.value);
+  } else {
+    return [];
+  }
+}
+
+function createLabel(
+  productName: string,
+  accountName: string,
+  value: number,
+): string {
+  return `${productName} ${filterNumbersAndDashes(accountName)} - $${value}`;
+}
+
+function filterNumbersAndDashes(str: string): string {
+  return str.replace(/[\d-]/g, "");
 }
