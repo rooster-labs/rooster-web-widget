@@ -1,6 +1,6 @@
 import { querySelectNumber, querySelectText } from "../utils";
 
-function parseAccountSummary(): Account[] {
+function extractSimpliiAccountDetails(): Account[] {
   const accountSummaryList = new Array<Account>();
   const allAccounts = [
     document.querySelectorAll(".items__list table.DEPOSIT tr.ember-view"),
@@ -26,7 +26,7 @@ function createSimpliiProduct(): Product {
   return {
     name: "Simplii",
     type: "bank",
-    accounts: parseAccountSummary(),
+    accounts: extractSimpliiAccountDetails(),
   };
 }
 

@@ -1,6 +1,7 @@
+import { Account, Product } from "../data/Accounts";
 import { querySelectNumber, querySelectText } from "../utils";
 
-function parseAccountSummary(): Account[] {
+function extractTangerineAccountDetails(): Account[] {
   const accountSummaryList = new Array<Account>();
   const tangerineAccounts = document.querySelector(".tangerine-accounts");
   const accountRows = tangerineAccounts?.querySelectorAll(".desktop-container");
@@ -22,7 +23,7 @@ function createTangerineProduct(): Product {
   return {
     name: "Tangerine",
     type: "bank",
-    accounts: parseAccountSummary(),
+    accounts: extractTangerineAccountDetails(),
   };
 }
 

@@ -1,6 +1,6 @@
 import { querySelectNumber, querySelectText } from "../utils";
 
-function parseSummaryOfInvestingAccounts(): Account[] {
+function extractQuestradeAccountDetails(): Account[] {
   const accountSummaryList: Account[] = [];
   const activeAccountListDiv = document.querySelector(".active-accounts-list");
   const accountRows = activeAccountListDiv?.querySelectorAll(".account-row");
@@ -21,7 +21,7 @@ function createQuestradeProduct(): Product {
   return {
     name: "Questrade",
     type: "broker",
-    accounts: parseSummaryOfInvestingAccounts(),
+    accounts: extractQuestradeAccountDetails(),
   };
 }
 

@@ -13,7 +13,7 @@ export interface CreditCardDetails {
   statementDetails: StatementData;
 }
 
-function parseFinancialData(): FinancialData {
+function extractFinancialData(): FinancialData {
   const financialData: FinancialData = {};
   const creditDetailsSection = document.querySelector(".credit-details");
 
@@ -37,7 +37,7 @@ function parseFinancialData(): FinancialData {
   return financialData;
 }
 
-function parseStatementDetails(): StatementData {
+function extractStatementDetails(): StatementData {
   const statementData: StatementData = {};
   const statementDetailsSection = document.querySelector(".statement-details");
 
@@ -58,14 +58,14 @@ function parseStatementDetails(): StatementData {
   return statementData;
 }
 
-function parseCreditCardDetails(): CreditCardDetails {
+function extractCreditCardDetails(): CreditCardDetails {
   return {
-    creditDetails: parseFinancialData(),
-    statementDetails: parseStatementDetails(),
+    creditDetails: extractFinancialData(),
+    statementDetails: extractStatementDetails(),
   };
 }
 
 export function logCreditCardData() {
   console.log("credit cards");
-  console.log(parseCreditCardDetails());
+  console.log(extractCreditCardDetails());
 }

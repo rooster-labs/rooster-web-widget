@@ -43,7 +43,7 @@ function getTombStoneSmallBoxText(boxIdx: number): string {
   );
 }
 
-function parseFinancialInfo(): FinancialInfo {
+function extractFinancialInfo(): FinancialInfo {
   return {
     balance: parseFloat(getTombStoneSmallBoxText(1)),
     availableFunds: parseFloat(getTombStoneSmallBoxText(2)),
@@ -60,7 +60,7 @@ function parseFinancialInfo(): FinancialInfo {
 // const financialInfo = parseFinancialInfo();
 // console.log(financialInfo);
 
-function getDepAccountTransactions(): TransactionData {
+function extractDepAccountTransactions(): TransactionData {
   const transactionRows = document.querySelectorAll("tr.transaction-row");
   const transactions = new Array<any>();
 
@@ -87,6 +87,6 @@ function getDepAccountTransactions(): TransactionData {
 
 export function logDepositAccountsData() {
   console.log("deposits");
-  console.log(parseFinancialInfo());
-  console.log(getDepAccountTransactions());
+  console.log(extractFinancialInfo());
+  console.log(extractDepAccountTransactions());
 }
