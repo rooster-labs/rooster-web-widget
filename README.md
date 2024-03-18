@@ -1,20 +1,17 @@
 # Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+This is a chrome extension made to help keep track of your financial data. This product detects and scraps financial data from your accounts and generates awesome visuals.
+
+The project is a chrome manifest v3 extension built using React.js with vite and CRXJS, written in Typescript.
 
 # Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+1. `npm i` - install the dependencies
+2. `npm run dev` - run the project in dev mode
+3. Follow the steps here to add the extension to your browser - https://crxjs.dev/vite-plugin/getting-started/react/dev-basics
 
 # Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+
+> TODO: Describe and show how to build your code and run the tests. 
 
 # Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+> TODO: Explain how other users and developers can contribute to make your code better.
