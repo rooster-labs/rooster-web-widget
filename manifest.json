@@ -1,6 +1,12 @@
 {
   "manifest_version": 3,
   "name": "Rooster Financial",
+  "icons": {
+    "16": "images/Scrooge Boc Boc 16.png",
+    "32": "images/Scrooge Boc Boc 32.png",
+    "48": "images/Scrooge Boc Boc 48.png",
+    "128": "images/Scrooge Boc Boc 128.png"
+  },
   "version": "1.0.0",
   "permissions": [ "storage" ],
   "action": { "default_popup": "index.html" },
@@ -9,13 +15,6 @@
     "type": "module"
   },
   "content_scripts": [
-    {
-      "js": ["src/content.tsx"],
-      "matches": [
-        "https://www.google.com/*", 
-        "https://online.simplii.com/*"
-      ]
-    },
     {
       "js": ["src/simplii/content.tsx"],
       "matches": [
@@ -31,6 +30,10 @@
     {
       "js": ["src/tangerine/content.tsx"],
       "matches": ["https://www.tangerine.ca/app/*"]
+    },
+    {
+      "js" : ["src/wealthsimple/content.tsx"],
+      "matches": ["https://my.wealthsimple.com/app/home"]
     }
   ]
 }

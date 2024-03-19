@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { ProductsData, calcNetWorth, getNetSummaryData } from "./data/Accounts";
+import { ProductsData, calcNetWorth, getNetSummaryData } from "./data/Product";
 import ReactECharts from "echarts-for-react";
 
 function App() {

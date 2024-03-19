@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@types/chrome": "^0.0.263",
     "echarts": "^5.5.0",
     "echarts-for-react": "^3.0.2",
     "lodash": "^4.17.21",

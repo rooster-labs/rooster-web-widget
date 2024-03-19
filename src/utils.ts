@@ -1,4 +1,14 @@
 /**
+ * Filters out numbers and dashes from a string.
+ *
+ * @param str - The input string to be filtered.
+ * @returns The filtered string with numbers and dashes removed.
+ */
+export function filterNumbersAndDashes(str: string): string {
+  return str.replace(/[\d-]/g, "");
+}
+
+/**
  * Selects text content from a specified element or document based on a query selector.
  *
  * @param e - The parent element or document from which to query.
@@ -6,7 +16,8 @@
  * @returns The text content of the selected element, trimmed of whitespace. Returns an empty string if the element is not found.
  */
 export function querySelectText(e: Element | Document, query: string): string {
-  return e.querySelector(query)?.textContent?.trim() ?? "";
+  const s = e.querySelector(query)?.textContent?.trim() ?? "";
+  return filterNumbersAndDashes(s);
 }
 
 /**
@@ -26,4 +37,3 @@ export function querySelectNumber(
 
   return parseFloat(textContent);
 }
-
