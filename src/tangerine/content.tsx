@@ -1,39 +1,32 @@
-import { Account, Product } from "../data/Accounts";
+import { Account } from "../data/Product";
+import { ProductSummaryExtractor } from "../data/ProductSummaryExtractor";
 import { querySelectNumber, querySelectText } from "../utils";
 
-function extractTangerineAccountDetails(): Account[] {
-  const accountSummaryList = new Array<Account>();
-  const tangerineAccounts = document.querySelector(".tangerine-accounts");
-  const accountRows = tangerineAccounts?.querySelectorAll(".desktop-container");
+class TangerineAccountSummaryExtractor extends ProductSummaryExtractor {
+  name = "Tangerine";
 
-  accountRows?.forEach((row) => {
-    accountSummaryList.push({
-      accountName: querySelectText(
-        row,
-        ".account-info span:nth-child(2) span:nth-child(2)"
-      ),
-      balance: querySelectNumber(row, ".account-balance span:nth-child(2)"),
+  extractAccountDetails(): Account[] {
+    const accounts: Account[] = [];
+    // Use document.querySelectorAll to select all account list items
+    const tangerineAccounts = document.querySelector(".tangerine-accounts");
+  const accountRows = tangerineAccounts?.querySelectorAll(".account-list .clickable-row") ?? [];
+  
+    accountRows.forEach((element) => {
+      const accountName = querySelectText(element, '.account-nickname');
+      const accountBalance = querySelectNumber(element, '.account-balance span:nth-child(2)');
+  
+      const account: Account = {
+        accountName, // Directly using accountName
+        balance: accountBalance,
+        // Additional properties can be included as needed.
+      };
+  
+      accounts.push(account);
     });
-  });
-
-  return accountSummaryList;
+  
+    return accounts;
+  }
+  
 }
 
-function createTangerineProduct(): Product {
-  return {
-    name: "Tangerine",
-    type: "bank",
-    accounts: extractTangerineAccountDetails(),
-  };
-}
-
-function onLoad() {
-  setTimeout(() => {
-    console.log("Tangerine Summary Page");
-    const tangerine = createTangerineProduct();
-    chrome.storage.local.set({tangerine: tangerine});
-    console.log(tangerine);
-  }, 2000);
-}
-
-onLoad();
+new TangerineAccountSummaryExtractor().onLoad()
