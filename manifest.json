@@ -16,23 +16,23 @@
   },
   "content_scripts": [
     {
-      "js": ["src/simplii/content.tsx"],
+      "js": ["src/simplii/content.ts"],
       "matches": [
         "https://online.simplii.com/*"
       ]
     },
     {
-      "js": ["src/questrade/content.tsx"],
+      "js": ["src/questrade/content.ts"],
       "matches": [
         "https://my.questrade.com/clients/en/my_home"
       ]
     },
     {
-      "js": ["src/tangerine/content.tsx"],
+      "js": ["src/tangerine/content.ts"],
       "matches": ["https://www.tangerine.ca/app/*"]
     },
     {
-      "js" : ["src/wealthsimple/content.tsx"],
+      "js" : ["src/wealthsimple/content.ts"],
       "matches": ["https://my.wealthsimple.com/app/home"]
     }
   ]
