@@ -1,11 +1,11 @@
-import { logAccountSummary } from "./accountSummary";
+import { SimpliiAccountSummaryExtractor } from "./AccountSummaryExtractor";
 import { logCreditCardData } from "./creditCardsAccounts";
 import { logDepositAccountsData } from "./depositsAccounts";
 
 function locationHashChanged() {
   const locationHash = window.location.hash;
 
-  console.log(location.hash);
+  console.log("Simplii content script", location.hash);
 
   setTimeout(() => {
     if (locationHash.startsWith("#/accounts")) {
@@ -14,10 +14,12 @@ function locationHashChanged() {
       } else if (locationHash.startsWith("#/accounts/credit-cards/")) {
         logCreditCardData();
       } else {
-        logAccountSummary();
+        new SimpliiAccountSummaryExtractor().onLoad()
       }
     }
-  }, 2000);
+  }, 4000);
 }
+
+locationHashChanged()
 
 window.onhashchange = locationHashChanged;
