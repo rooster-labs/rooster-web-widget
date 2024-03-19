@@ -1,4 +1,5 @@
 import { sumBy } from "lodash";
+import { filterNumbersAndDashes } from "../utils";
 
 // Interface representing a collection of products indexed by a string key.
 export interface ProductsData {
@@ -8,19 +9,21 @@ export interface ProductsData {
 // Interface for the structure of a Product.
 export interface Product {
   name: string; // The name of the product.
-  type: string; // The type/category of the product.
   accounts: Account[]; // An array of Account objects associated with the product.
 }
 
 // Interface for the structure of an Account.
 export interface Account {
   accountName: string; // The name of the account.
+  types?: Array<string> // a list of types that help classify the kind of account 
   balance: number; // The current balance of the account.
   pendingBalance?: number; // The pending balance of the account (optional).
   cash?: number; // The cash amount in the account (optional).
   marketValue?: number; // The market value of the account's holdings (optional).
   transactions?: Array<any>; // An array of transactions associated with the account (optional, type can be specified more explicitly than `any` if known).
 }
+
+export type AccountTypes = "deposit" | "credit" | "investment" | "loan" | "lineOfCredit" | "securedLineOfCredit" | "TFSA" | "RRSP" | "FHSA" | "crypto";
 
 /**
  * Calculates the total net worth based on the provided products data.
@@ -72,14 +75,4 @@ function createLabel(
   value: number,
 ): string {
   return `${productName} ${filterNumbersAndDashes(accountName)} - $${value}`;
-}
-
-/**
- * Filters out numbers and dashes from a string.
- *
- * @param str - The input string to be filtered.
- * @returns The filtered string with numbers and dashes removed.
- */
-function filterNumbersAndDashes(str: string): string {
-  return str.replace(/[\d-]/g, "");
 }
