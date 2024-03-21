@@ -21,6 +21,7 @@ function App() {
     //   left: "center",
     // },
     legend: {
+      type: "scroll",
       orient: "vertical",
       right: 0,
       // x: 'right',
