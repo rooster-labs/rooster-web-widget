@@ -1,4 +1,4 @@
-import { Account } from "../data/Product";
+import { Account, findAllAccountType } from "../data/Product";
 import { ProductSummaryExtractor } from "../data/ProductSummaryExtractor";
 import { querySelectNumber, querySelectText } from "../utils";
 
@@ -13,11 +13,12 @@ class TangerineAccountSummaryExtractor extends ProductSummaryExtractor {
   
     accountRows.forEach((element) => {
       const accountName = querySelectText(element, '.account-nickname');
-      const accountBalance = querySelectNumber(element, '.account-balance span:nth-child(2)');
+      const balance = querySelectNumber(element, '.account-balance span:nth-child(2)');
   
       const account: Account = {
         accountName, // Directly using accountName
-        balance: accountBalance,
+        types: findAllAccountType(accountName),
+        balance,
         // Additional properties can be included as needed.
       };
   

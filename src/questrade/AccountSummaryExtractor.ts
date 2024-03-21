@@ -1,5 +1,5 @@
 import { querySelectNumber, querySelectText } from "../utils";
-import { Account } from "../data/Product";
+import { Account, findAllAccountType } from "../data/Product";
 import { ProductSummaryExtractor } from "../data/ProductSummaryExtractor";
 
 export class QuestradeAccountSummaryExtractor extends ProductSummaryExtractor {
@@ -14,8 +14,10 @@ export class QuestradeAccountSummaryExtractor extends ProductSummaryExtractor {
     const accountRows = activeAccountListDiv?.querySelectorAll(".account-row");
 
     accountRows?.forEach((row) => {
+      const accountName = querySelectText(row, ".account-name");
       accountSummaryList.push({
-        accountName: querySelectText(row, ".account-name"),
+        accountName,
+        types: findAllAccountType(accountName),
         cash: querySelectNumber(row, ".col-cash div:nth-child(2)"),
         marketValue: querySelectNumber(
           row,

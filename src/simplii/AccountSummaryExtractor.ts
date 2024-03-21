@@ -1,4 +1,4 @@
-import { Account } from "../data/Product";
+import { Account, findAllAccountType } from "../data/Product";
 import { ProductSummaryExtractor } from "../data/ProductSummaryExtractor";
 import { querySelectNumber, querySelectText } from "../utils";
 
@@ -19,6 +19,7 @@ export class SimpliiAccountSummaryExtractor extends ProductSummaryExtractor {
         if (accountName != "") {
           accountSummaryList.push({
             accountName: querySelectText(row, ".account-name"),
+            types: findAllAccountType(accountName),
             balance: querySelectNumber(row, ".balance"),
           });
         }

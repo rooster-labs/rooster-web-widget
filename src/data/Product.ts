@@ -15,7 +15,7 @@ export interface Product {
 // Interface for the structure of an Account.
 export interface Account {
   accountName: string; // The name of the account.
-  types?: Array<string> // a list of types that help classify the kind of account 
+  types: Array<string>; // a list of types that help classify the kind of account
   balance: number; // The current balance of the account.
   pendingBalance?: number; // The pending balance of the account (optional).
   cash?: number; // The cash amount in the account (optional).
@@ -23,7 +23,65 @@ export interface Account {
   transactions?: Array<any>; // An array of transactions associated with the account (optional, type can be specified more explicitly than `any` if known).
 }
 
-export type AccountTypes = "deposit" | "credit" | "investment" | "loan" | "lineOfCredit" | "securedLineOfCredit" | "TFSA" | "RRSP" | "FHSA" | "crypto";
+const depositClassifier = new Set([
+  "chequing",
+  "crypto",
+  "fhsa",
+  "rrsp",
+  "rsp",
+  "savings",
+  "tfsa",
+  "non-registered",
+]);
+
+const creditClassifier = new Set([
+  "credit card",
+  "loan",
+  "line of credit",
+  "secured line of credit",
+  "visa",
+  "mastercard",
+  "american express",
+  'amex'
+]);
+
+const creditCardClassifier = new Set([
+  "visa",
+  "mastercard",
+  "american express",
+]);
+
+export function findAllAccountType(accountName: string): string[] {
+  const lowerCaseName = accountName.toLowerCase();
+  const accountTypeList = new Array<string>();
+  let isDeposit = false;
+
+  depositClassifier.forEach((c) => {
+    if (lowerCaseName.includes(c) || lowerCaseName.includes(c.toUpperCase())) {
+      accountTypeList.push(c);
+      isDeposit = true;
+    }
+  });
+
+  if (lowerCaseName == "cash") {
+    accountTypeList.push("chequing");
+    isDeposit = true;
+  }
+
+  if (!isDeposit) {
+    creditClassifier.forEach((c) => {
+      if (lowerCaseName.includes(c) || lowerCaseName.includes(c.toUpperCase())) {
+        if (creditCardClassifier.has(c)) {
+          accountTypeList.push("credit card");
+        } else {
+          accountTypeList.push(c);
+        }
+      }
+    });
+  }
+
+  return accountTypeList;
+}
 
 /**
  * Calculates the total net worth based on the provided products data.
@@ -40,6 +98,14 @@ export function calcNetWorth(productData: ProductsData | undefined): number {
   }
 }
 
+function getAllDepositAccounts(accounts: Account[]): Account[] {
+  if (accounts) {
+    return accounts.filter((a) => a.types.length > 0 && depositClassifier.has(a.types[0]));
+  } else {
+    return [];
+  }
+}
+
 /**
  * Generates a summary data array from the product data, containing labels and values for each account.
  *
@@ -51,7 +117,7 @@ export function getNetSummaryData(
 ): Array<{ name: string; value: number }> {
   if (productData) {
     return Object.values(productData).flatMap((p) =>
-      p.accounts.map((a) => ({
+      getAllDepositAccounts(p.accounts).map((a) => ({
         name: createLabel(p.name, a.accountName, a.balance),
         value: a.balance,
       }))

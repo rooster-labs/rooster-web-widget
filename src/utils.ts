@@ -5,7 +5,7 @@
  * @returns The filtered string with numbers and dashes removed.
  */
 export function filterNumbersAndDashes(str: string): string {
-  return str.replace(/[\d-]/g, "");
+  return str.replace(/[\d]|\s-/g, "").trim();
 }
 
 /**
