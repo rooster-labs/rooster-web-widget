@@ -23,16 +23,19 @@ export interface Account {
   transactions?: Array<any>; // An array of transactions associated with the account (optional, type can be specified more explicitly than `any` if known).
 }
 
+// TODO: Create a deposit types Set. Then a seperate Map for type to classifier
+
 const depositClassifier = new Set([
   "chequing",
   "crypto",
   "fhsa",
   "rrsp",
-  "rsp",
   "savings",
   "tfsa",
   "non-registered",
 ]);
+
+const rrspClassifier = new Set(["rrsp", "rsp"]);
 
 const creditClassifier = new Set([
   "credit card",
@@ -42,7 +45,7 @@ const creditClassifier = new Set([
   "visa",
   "mastercard",
   "american express",
-  'amex'
+  "amex",
 ]);
 
 const creditCardClassifier = new Set([
@@ -58,7 +61,11 @@ export function findAllAccountType(accountName: string): string[] {
 
   depositClassifier.forEach((c) => {
     if (lowerCaseName.includes(c) || lowerCaseName.includes(c.toUpperCase())) {
-      accountTypeList.push(c);
+      if (rrspClassifier.has(c)) {
+        accountTypeList.push("rrsp");
+      } else {
+        accountTypeList.push(c);
+      }
       isDeposit = true;
     }
   });
@@ -70,7 +77,9 @@ export function findAllAccountType(accountName: string): string[] {
 
   if (!isDeposit) {
     creditClassifier.forEach((c) => {
-      if (lowerCaseName.includes(c) || lowerCaseName.includes(c.toUpperCase())) {
+      if (
+        lowerCaseName.includes(c) || lowerCaseName.includes(c.toUpperCase())
+      ) {
         if (creditCardClassifier.has(c)) {
           accountTypeList.push("credit card");
         } else {
@@ -100,7 +109,9 @@ export function calcNetWorth(productData: ProductsData | undefined): number {
 
 function getAllDepositAccounts(accounts: Account[]): Account[] {
   if (accounts) {
-    return accounts.filter((a) => a.types.length > 0 && depositClassifier.has(a.types[0]));
+    return accounts.filter((a) =>
+      a.types.length > 0 && depositClassifier.has(a.types[0])
+    );
   } else {
     return [];
   }
@@ -112,7 +123,7 @@ function getAllDepositAccounts(accounts: Account[]): Account[] {
  * @param productData - An optional ProductsData object containing information about various products and their accounts.
  * @returns An array of objects, each with a 'name' and 'value' property, representing each account. Sorted by value in descending order.
  */
-export function getNetSummaryData(
+export function getNetSummaryDataByAccount(
   productData: ProductsData | undefined,
 ): Array<{ name: string; value: number }> {
   if (productData) {
@@ -122,6 +133,37 @@ export function getNetSummaryData(
         value: a.balance,
       }))
     ).sort((a, b) => b.value - a.value);
+  } else {
+    return [];
+  }
+}
+
+export function getNetSummaryDataByType(
+  productData: ProductsData | undefined,
+): Array<{ name: string; value: number }> {
+  if (productData) {
+    const depositAccounts = Object.values(productData).flatMap((p) =>
+      getAllDepositAccounts(p.accounts)
+    );
+    const depositTypeToValue = new Map<string, number>();
+
+    depositAccounts.forEach((a) => {
+      const types = a.types;
+      const t = types[0];
+      const v = depositTypeToValue.get(t);
+
+      if (v != undefined) {
+        depositTypeToValue.set(t, v + a.balance);
+      } else {
+        depositTypeToValue.set(t, a.balance);
+      }
+    });
+
+    
+    return Array.from(depositTypeToValue).map(([n, value]) => ({
+      name: createLabel(n.toUpperCase(), "", value),
+      value,
+    }));
   } else {
     return [];
   }
