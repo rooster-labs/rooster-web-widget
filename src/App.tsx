@@ -75,9 +75,11 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Rooster Financial</h1>
-      <h2>Net Worth: {calcNetWorth(products).toFixed(2)}</h2>
-      <button onClick={handleToggle}>Deposit Types / Accounts</button>
+      <h1 className="text-lg">Rooster Financial</h1>
+      <div className="flex justify-between text-base">
+        <h2>Net Worth: {calcNetWorth(products).toFixed(2)}</h2>
+        <button onClick={handleToggle}>Deposit Types / Accounts</button>
+      </div>
       {isToggled ? (
         <div>
           <ReactECharts
@@ -87,11 +89,10 @@ function App() {
         </div>
       ) : (
         <div>
-          {" "}
           <ReactECharts
             option={dataByTypeOptions}
             style={{ height: 200, width: 500 }}
-          />{" "}
+          />
         </div>
       )}
     </div>
