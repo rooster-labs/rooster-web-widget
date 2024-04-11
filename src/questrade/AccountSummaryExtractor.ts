@@ -1,5 +1,5 @@
 import { querySelectNumber, querySelectText } from "../utils";
-import { Account, findAllAccountType } from "../data/Product";
+import { Account, findAllAccountType } from "../data/Business";
 import { ProductSummaryExtractor } from "../data/ProductSummaryExtractor";
 
 export class QuestradeAccountSummaryExtractor extends ProductSummaryExtractor {

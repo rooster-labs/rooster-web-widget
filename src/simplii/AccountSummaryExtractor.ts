@@ -1,4 +1,4 @@
-import { Account, findAllAccountType } from "../data/Product";
+import { Account, findAllAccountType } from "../data/Business";
 import { ProductSummaryExtractor } from "../data/ProductSummaryExtractor";
 import { querySelectNumber, querySelectText } from "../utils";
 

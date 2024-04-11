@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import {
-  ProductsData,
+  BusinessesData,
   calcNetWorth,
   getNetSummaryDataByAccount,
   getNetSummaryDataByType,
-} from "./data/Product";
+} from "./data/Business";
 import ReactECharts from "echarts-for-react";
 
 type PieChartData = Array<{ name: string; value: number }>;
 
 function App() {
-  const [products, setProductsData] = useState<ProductsData>();
+  const [products, setProductsData] = useState<BusinessesData>();
 
   useEffect(() => {
     chrome.storage.local.get(null, (data) => {

@@ -1,11 +1,11 @@
-import { Account, Product } from "./Product";
+import { Account, Business } from "./Business";
 
 export abstract class ProductSummaryExtractor {
   abstract name: string;
 
   abstract extractAccountDetails(): Account[];
 
-  createProduct(): Product {
+  createProduct(): Business {
     return {
       name: this.name,
       accounts: this.extractAccountDetails(),

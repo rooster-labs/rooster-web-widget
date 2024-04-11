@@ -2,12 +2,12 @@ import { sumBy } from "lodash";
 import { filterNumbersAndDashes } from "../utils";
 
 // Interface representing a collection of products indexed by a string key.
-export interface ProductsData {
-  [key: string]: Product; // Key-value pairs where the key is a string and the value is a Product.
+export interface BusinessesData {
+  [key: string]: Business; // Key-value pairs where the key is a string and the value is a Product.
 }
 
 // Interface for the structure of a Product.
-export interface Product {
+export interface Business {
   name: string; // The name of the product.
   accounts: Account[]; // An array of Account objects associated with the product.
 }
@@ -98,7 +98,7 @@ export function findAllAccountType(accountName: string): string[] {
  * @param productData - An optional ProductsData object containing information about various products and their accounts.
  * @returns The total net worth as a number. Returns 0 if no product data is provided.
  */
-export function calcNetWorth(productData: ProductsData | undefined): number {
+export function calcNetWorth(productData: BusinessesData | undefined): number {
   if (productData) {
     const productList = Object.values(productData);
     return sumBy(productList, (p) => sumBy(p.accounts, (a) => a.balance));
@@ -124,7 +124,7 @@ function getAllDepositAccounts(accounts: Account[]): Account[] {
  * @returns An array of objects, each with a 'name' and 'value' property, representing each account. Sorted by value in descending order.
  */
 export function getNetSummaryDataByAccount(
-  productData: ProductsData | undefined,
+  productData: BusinessesData | undefined,
 ): Array<{ name: string; value: number }> {
   if (productData) {
     return Object.values(productData).flatMap((p) =>
@@ -139,7 +139,7 @@ export function getNetSummaryDataByAccount(
 }
 
 export function getNetSummaryDataByType(
-  productData: ProductsData | undefined,
+  productData: BusinessesData | undefined,
 ): Array<{ name: string; value: number }> {
   if (productData) {
     const depositAccounts = Object.values(productData).flatMap((p) =>
@@ -159,7 +159,6 @@ export function getNetSummaryDataByType(
       }
     });
 
-    
     return Array.from(depositTypeToValue).map(([n, value]) => ({
       name: createLabel(n.toUpperCase(), "", value),
       value,
