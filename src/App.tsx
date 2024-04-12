@@ -7,21 +7,22 @@ import {
   getNetSummaryDataByType,
 } from "./data/Business";
 import ReactECharts from "echarts-for-react";
+import ManageBusinesses from "./components/ManageBusinesses";
 
 type PieChartData = Array<{ name: string; value: number }>;
 
 function App() {
-  const [products, setProductsData] = useState<BusinessesData>();
+  const [businessData, setBusinessData] = useState<BusinessesData>();
 
   useEffect(() => {
     chrome.storage.local.get(null, (data) => {
       console.log("Stored data:", data);
-      setProductsData(data);
+      setBusinessData(data);
     });
   }, []);
 
-  const netSummaryDataByAccount = getNetSummaryDataByAccount(products);
-  const netSummaryDataByType = getNetSummaryDataByType(products);
+  const netSummaryDataByAccount = getNetSummaryDataByAccount(businessData);
+  const netSummaryDataByType = getNetSummaryDataByType(businessData);
 
   const createOption = (data: PieChartData) => {
     return {
@@ -152,15 +153,16 @@ function App() {
   function NavView() {
     if (navState == "manage-business") {
       return (
-        <div className="">
-          <h2 className="text-lg">"Manage business"</h2>
-        </div>
+        <ManageBusinesses
+          initBusinessData={businessData}
+          setBusinessData={setBusinessData}
+        />
       );
     } else {
       return (
         <>
           <div className="flex justify-between text-base">
-            <h2>Net Worth: {calcNetWorth(products).toFixed(2)}</h2>
+            <h2>Net Worth: {calcNetWorth(businessData).toFixed(2)}</h2>
             <button onClick={handleToggle}>Deposit Types / Accounts</button>
           </div>
           <NetworthChart />
