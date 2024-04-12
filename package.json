@@ -11,9 +11,11 @@
     "@types/chrome": "^0.0.263",
     "echarts": "^5.5.0",
     "echarts-for-react": "^3.0.2",
+    "immer": "^10.0.4",
     "lodash": "^4.17.21",
     "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react-dom": "^18.0.0",
+    "use-immer": "^0.9.0"
   },
   "devDependencies": {
     "@crxjs/vite-plugin": "^1.0.14",
