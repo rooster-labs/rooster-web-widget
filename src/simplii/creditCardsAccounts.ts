@@ -1,4 +1,4 @@
-import { querySelectText } from "../utils";
+import { querySelectText } from "../utils.js";
 
 interface StatementData {
   [label: string]: string | number;

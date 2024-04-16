@@ -1,4 +1,4 @@
-import { querySelectText } from "../utils";
+import { querySelectText } from "../utils.js";
 
 interface FinancialInfo {
   balance: number;

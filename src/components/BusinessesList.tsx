@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Business, BusinessesData } from "../data/Business";
-import { AccountsList, PlusIcon } from "./AccountsList";
+import { Business, BusinessesData } from "../data/Business.js";
+import { AccountsList, PlusIcon } from "./AccountsList.js";
 
 
 function ManageBusiness(props: any) {

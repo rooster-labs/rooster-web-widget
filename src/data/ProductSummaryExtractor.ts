@@ -1,4 +1,4 @@
-import { Account, Business } from "./Business";
+import { Account, Business } from "./Business.js";
 
 export abstract class ProductSummaryExtractor {
   abstract name: string;

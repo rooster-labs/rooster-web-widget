@@ -1,6 +1,6 @@
-import { Account, findAllAccountType } from "../data/Business";
-import { ProductSummaryExtractor } from "../data/ProductSummaryExtractor";
-import { querySelectNumber, querySelectText } from "../utils";
+import { Account, findAllAccountType } from "../data/Business.js";
+import { ProductSummaryExtractor } from "../data/ProductSummaryExtractor.js";
+import { querySelectNumber, querySelectText } from "../utils.js";
 
 export class SimpliiAccountSummaryExtractor extends ProductSummaryExtractor {
   name = "Simplii";

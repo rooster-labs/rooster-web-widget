@@ -2,6 +2,7 @@
   "name": "vite-project",
   "private": true,
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -9,6 +10,7 @@
   },
   "dependencies": {
     "@types/chrome": "^0.0.263",
+    "@types/echarts": "^4.9.22",
     "echarts": "^5.5.0",
     "echarts-for-react": "^3.0.2",
     "immer": "^10.0.4",
