@@ -1,5 +1,5 @@
 import { sumBy } from "lodash";
-import { filterNumbersAndDashes } from "../utils";
+import { filterNumbersAndDashes } from "../utils.js";
 
 // Interface representing a collection of products indexed by a string key.
 export interface BusinessesData {

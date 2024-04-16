@@ -5,9 +5,9 @@ import {
   calcNetWorth,
   getNetSummaryDataByAccount,
   getNetSummaryDataByType,
-} from "./data/Business";
+} from "./data/Business.js";
 import ReactECharts from "echarts-for-react";
-import ManageBusinesses from "./components/ManageBusinesses";
+import ManageBusinesses from "./components/ManageBusinesses.js";
 
 type PieChartData = Array<{ name: string; value: number }>;
 

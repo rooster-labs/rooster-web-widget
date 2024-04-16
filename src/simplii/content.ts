@@ -1,6 +1,6 @@
-import { SimpliiAccountSummaryExtractor } from "./AccountSummaryExtractor";
-import { logCreditCardData } from "./creditCardsAccounts";
-import { logDepositAccountsData } from "./depositsAccounts";
+import { SimpliiAccountSummaryExtractor } from "./AccountSummaryExtractor.js";
+import { logCreditCardData } from "./creditCardsAccounts.js";
+import { logDepositAccountsData } from "./depositsAccounts.js";
 
 function locationHashChanged() {
   const locationHash = window.location.hash;

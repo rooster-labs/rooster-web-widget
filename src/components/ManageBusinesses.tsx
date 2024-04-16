@@ -1,7 +1,7 @@
 import { useImmerReducer } from "use-immer";
-import { BusinessesData, Business, Account } from "../data/Business";
-import { ManageBusinessesList } from "./BusinessesList";
-import { businessDataReducer } from "../data/BusinessReducer";
+import { BusinessesData, Business, Account } from "../data/Business.js";
+import { ManageBusinessesList } from "./BusinessesList.js";
+import { businessDataReducer } from "../data/BusinessReducer.js";
   
 
 function ManageBusinesses({

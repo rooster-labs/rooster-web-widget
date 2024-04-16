@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Account, Business } from "../data/Business";
+import { Account, Business } from "../data/Business.js";
 
 function DollarIcon() {
   return (

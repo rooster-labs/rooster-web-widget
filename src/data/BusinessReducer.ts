@@ -3,7 +3,7 @@ import {
   Business,
   BusinessesData,
   findAllAccountType,
-} from "./Business";
+} from "./Business.js";
 
 class ManageBusiness implements BusinessesData {
   [key: string]: Business;
