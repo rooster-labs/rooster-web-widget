@@ -39,7 +39,6 @@ export function TrashIcon() {
   );
 }
 
-
 export function PlusIcon() {
   return (
     <svg
@@ -59,9 +58,7 @@ export function PlusIcon() {
   );
 }
 
-function AddAccount(props: any) {
-  const onAddAccount = props.onAddAccount;
-  const businessName: string = props.businessName;
+function AddAccount({ onAddAccount, businessName }: ManageBusinessListProps) {
   const [accountName, setAccountName] = useState("");
   const [accountBalance, setBalance] = useState(0);
 
@@ -84,14 +81,14 @@ function AddAccount(props: any) {
           onChange={(e) => setBalance(parseFloat(e.target.value))}
         />
       </label>
-      <button 
-        className="btn btn-ghost btn-circle btn-xs items-center mr-1 ml-1.5"
+      <button
+        className="btn btn-circle btn-ghost btn-xs ml-1.5 mr-1 items-center"
         onClick={() => {
           onAddAccount(businessName, accountName, accountBalance);
           setAccountName("");
-          setBalance(0)
+          setBalance(0);
         }}
-        >
+      >
         <PlusIcon />
       </button>
     </div>
@@ -99,42 +96,97 @@ function AddAccount(props: any) {
 }
 
 // TODO: Switch to Flex Grid design
-function ManageAccount({ account }: { account: Account }) {
+function ManageAccount({
+  businessName,
+  account,
+  onDeleteAccount,
+  onEditAccount,
+}: ManageBusinessListProps) {
+  if (!businessName || !account || !onDeleteAccount || !onEditAccount)
+    throw new Error("Account is required");
+
+  const { accountName, balance } = account;
+  const [accountNameState, setAccountName] = useState(accountName);
+  const [balanceState, setBalance] = useState(balance);
+
   return (
     <div className="flex items-center justify-between gap-2 text-base">
       <input
         type="text"
-        placeholder={account.accountName}
-        value={account.accountName}
+        placeholder={accountName}
+        value={accountNameState}
         className="input input-sm input-ghost w-full max-w-xs"
+        onChange={(e) => {
+          setAccountName(e.target.value);
+        }}
+        onBlur={() =>
+          onEditAccount(
+            businessName,
+            accountName,
+            accountNameState,
+            balanceState,
+          )
+        }
       />
       <label className="input input-sm input-ghost flex items-center gap-2">
         <DollarIcon />
         <input
           type="number"
           className="grow"
-          placeholder={`${account.balance}`}
-          value={`${account.balance}`}
+          placeholder={`${balance}`}
+          value={`${balanceState}`}
+          onChange={(e) => {
+            setBalance(parseFloat(e.target.value));
+          }}
+          onBlur={() =>
+            onEditAccount(
+              businessName,
+              accountName,
+              accountNameState,
+              balanceState,
+            )
+          }
         />
       </label>
-      <button className="btn btn-outline btn-error btn-xs items-center">
+      <button
+        className="btn btn-outline btn-error btn-xs items-center"
+        onClick={() => {
+          onDeleteAccount(businessName, accountName);
+        }}
+      >
         <TrashIcon />
       </button>
     </div>
   );
 }
 
-export function AccountsList(props: any) {
-  const business: Business = props.business;
-  const onAddAccount = props.onAddAccount;
-  const {name, accounts} = business;
+export function AccountsList({
+  business,
+  onDeleteAccount,
+  onEditAccount,
+  onAddAccount,
+}: ManageBusinessListProps) {
+  if (!business) throw new Error("Business is required");
+
+  const { name, accounts } = business;
 
   return (
     <div>
-      {accounts.map((account) => (
-        <ManageAccount account={account} />
-      ))}
-      <AddAccount businessName={name} onAddAccount={onAddAccount}/>
+      <ul>
+        {accounts.map((account) => (
+          <li key={account.accountName}>
+            <ManageAccount
+              businessName={name}
+              account={account}
+              onEditAccount={onEditAccount}
+              onDeleteAccount={onDeleteAccount}
+            />
+          </li>
+        ))}
+        <li key="add account">
+          <AddAccount businessName={name} onAddAccount={onAddAccount} />
+        </li>
+      </ul>
     </div>
   );
 }
