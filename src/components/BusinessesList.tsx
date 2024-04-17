@@ -1,40 +1,54 @@
-import { useState } from "react";
-import { Business, BusinessesData } from "../data/Business.js";
-import { AccountsList, PlusIcon } from "./AccountsList.js";
+import React, { useState } from "react";
+import { Business, BusinessesData } from "../data/Business";
+import { AccountsList } from "./AccountsList";
+import { PlusIcon } from "./ManageBusinessesIcons";
 
-type IOnAddBusiness = (businessName: string) => void;
-type IOnAddAccount = (
+// Function Types
+export type AddBusinessFunction = (businessName: string) => void;
+
+export type AddAccountFunction = (
   businessName: string,
   accountName: string,
   balance: number,
 ) => void;
-type IOnDeleteAccount = (businessName: string, accountName: string) => void;
-type IOnEditAccount = (
+
+export type DeleteAccountFunction = (
+  businessName: string,
+  accountName: string,
+) => void;
+
+export type EditAccountFunction = (
   businessName: string,
   accountName: string,
   newAccountName: string,
   balance: number,
 ) => void;
 
-export type ManageBusinessListProps = {
-  businessData?: BusinessesData;
-  business?: Business;
-  account?: Account;
-  businessName?: string;
-  onAddBusiness?: IOnAddBusiness;
-  onAddAccount?: IOnAddAccount;
-  onDeleteAccount?: IOnDeleteAccount;
-  onEditAccount?: IOnEditAccount;
+interface AddBusinessProps {
+  onAddBusiness: AddBusinessFunction;
 };
+
+interface ManageBusinessProps {
+  business: Business;
+  onAddAccount?: AddAccountFunction;
+  onDeleteAccount?: DeleteAccountFunction;
+  onEditAccount?: EditAccountFunction;
+}
+
+interface ManageBusinessesListProps {
+  businessData: BusinessesData;
+  onAddBusiness: AddBusinessFunction;
+  onAddAccount: AddAccountFunction;
+  onDeleteAccount: DeleteAccountFunction;
+  onEditAccount: EditAccountFunction;
+}
 
 function ManageBusiness({
   business,
   onAddAccount,
   onDeleteAccount,
   onEditAccount,
-}: ManageBusinessListProps) {
-  if (!business) throw new Error("Business is undefined");
-  
+}: ManageBusinessProps) {
   return (
     <div className="collapse join-item collapse-arrow border border-base-300">
       <input type="checkbox" name="my-accordion-4" />
@@ -51,10 +65,14 @@ function ManageBusiness({
   );
 }
 
-function AddBusiness({ onAddBusiness }: ManageBusinessListProps) {
-  if (!onAddBusiness) throw new Error("onAddBusiness is required");
-
-  const [name, setName] = useState("Add New Business");
+function AddBusiness({ onAddBusiness }: AddBusinessProps) {
+  const [name, setName] = useState("");
+  const handleOnAddBusiness = () => {
+    if (name.trim()) {
+      onAddBusiness(name);
+      setName("");
+    }
+  };
 
   return (
     <div className="flex items-center justify-between gap-2 border border-base-300 text-base">
@@ -67,10 +85,7 @@ function AddBusiness({ onAddBusiness }: ManageBusinessListProps) {
       />
       <button
         className="btn btn-circle btn-ghost btn-xs mr-3 items-center"
-        onClick={() => {
-          onAddBusiness(name);
-          setName("");
-        }}
+        onClick={handleOnAddBusiness}
       >
         <PlusIcon />
       </button>
@@ -84,9 +99,7 @@ export function ManageBusinessesList({
   onAddAccount,
   onDeleteAccount,
   onEditAccount,
-}: ManageBusinessListProps) {
-  if (businessData == undefined) return null;
-
+}: ManageBusinessesListProps) {
   const businessesList = Object.values(businessData);
 
   return (
