@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Business, BusinessesData } from "../data/Business";
-import { AccountsList } from "./AccountsList";
-import { PlusIcon } from "./ManageBusinessesIcons";
+import { Business, BusinessesData } from "../data/Business.js";
+import { AccountsList } from "./AccountsList.js";
+import { PlusIcon } from "./ManageBusinessesIcons.js";
 
 // Function Types
 export type AddBusinessFunction = (businessName: string) => void;

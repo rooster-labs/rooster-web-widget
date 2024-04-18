@@ -1,13 +1,6 @@
-import { useEffect, useState } from "react";
-import "./App.css";
-import {
-  BusinessesData,
-  calcNetWorth,
-  getNetSummaryDataByAccount,
-  getNetSummaryDataByType,
-} from "./data/Business.js";
-import ReactECharts from "echarts-for-react";
+import React, { useState, useEffect } from "react";
 import ManageBusinesses from "./components/ManageBusinesses.js";
+import { BusinessesData, getNetSummaryDataByAccount, getNetSummaryDataByType, calcNetWorth } from "./data/Business.js";
 
 type PieChartData = Array<{ name: string; value: number }>;
 
