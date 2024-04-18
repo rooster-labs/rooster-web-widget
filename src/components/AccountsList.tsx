@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { DollarIcon, PlusIcon, TrashIcon } from "./ManageBusinessesIcons";
+import { DollarIcon, PlusIcon, TrashIcon } from "./ManageBusinessesIcons.js";
 import {
   AddAccountFunction,
   DeleteAccountFunction,
   EditAccountFunction,
-} from "./BusinessesList";
-import { Account, Business } from "../data/Business";
+} from "./BusinessesList.js";
+import { Account, Business } from "../data/Business.js";
 import React from "react";
 
 interface AddAccountProps {

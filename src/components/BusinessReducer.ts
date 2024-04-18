@@ -1,4 +1,4 @@
-import { BusinessesData, findAllAccountType } from "../data/Business";
+import { BusinessesData, findAllAccountType } from "../data/Business.js";
 
 export type BusinessesDataActionTypes =
   | "addBusiness"
