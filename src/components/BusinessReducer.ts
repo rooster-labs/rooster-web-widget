@@ -1,7 +1,4 @@
-import {
-  BusinessesData,
-  findAllAccountType,
-} from "./Business.js";
+import { BusinessesData, findAllAccountType } from "../data/Business";
 
 export type BusinessesDataActionTypes =
   | "addBusiness"
@@ -59,9 +56,7 @@ export function businessDataReducer(
     case "addAccount":
       if (
         accountName && balance !== undefined &&
-        !state[businessName].accounts.find((a) =>
-          a.accountName === accountName
-        )
+        !state[businessName].accounts.find((a) => a.accountName === accountName)
       ) {
         state[businessName].accounts.push({
           accountName: accountName,
@@ -74,7 +69,7 @@ export function businessDataReducer(
     case "deleteAccount":
       if (accountName) {
         state[businessName].accounts = state[businessName].accounts.filter(
-          (a) => a.accountName !== accountName
+          (a) => a.accountName !== accountName,
         );
       }
       break;

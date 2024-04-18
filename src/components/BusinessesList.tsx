@@ -30,9 +30,9 @@ interface AddBusinessProps {
 
 interface ManageBusinessProps {
   business: Business;
-  onAddAccount?: AddAccountFunction;
-  onDeleteAccount?: DeleteAccountFunction;
-  onEditAccount?: EditAccountFunction;
+  onAddAccount: AddAccountFunction;
+  onDeleteAccount: DeleteAccountFunction;
+  onEditAccount: EditAccountFunction;
 }
 
 interface ManageBusinessesListProps {

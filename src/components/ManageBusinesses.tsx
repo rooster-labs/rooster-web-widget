@@ -1,8 +1,8 @@
+import React from "react";
 import { useImmerReducer } from "use-immer";
-import { BusinessesData } from "../data/Business.js";
-import { ManageBusinessesList } from "./BusinessesList.js";
-import { businessDataReducer } from "../data/BusinessReducer.js";
-  
+import { BusinessesData } from "../data/Business";
+import { ManageBusinessesList } from "./BusinessesList";
+import { businessDataReducer } from "./BusinessReducer";
 
 interface ManageBusinessesProp {
   initBusinessData: BusinessesData | undefined;
