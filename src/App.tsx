@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import ReactECharts from "echarts-for-react";
+import { useState, useEffect } from "react";
 import ManageBusinesses from "./components/ManageBusinesses.js";
 import "./App.css";
 import {
@@ -8,10 +7,15 @@ import {
   getNetSummaryDataByType,
   calcNetWorth,
 } from "./data/Business.js";
+import { Doughnut } from "react-chartjs-2";
+import { ArcElement, Chart, ChartData, ChartOptions, Legend, Tooltip } from "chart.js";
 
 type PieChartData = Array<{ name: string; value: number }>;
 
+
+
 function App() {
+  Chart.register(ArcElement, Tooltip, Legend);
   const [businessData, setBusinessData] = useState<BusinessesData>();
 
   useEffect(() => {
@@ -23,50 +27,52 @@ function App() {
 
   const netSummaryDataByAccount = getNetSummaryDataByAccount(businessData);
   const netSummaryDataByType = getNetSummaryDataByType(businessData);
+  const matteColors: string[] = [
+    'rgb(166, 206, 227)',
+    'rgb(178, 223, 138)',
+    'rgb(227, 26, 28)',
+    'rgb(51, 160, 44)',
+    'rgb(31, 120, 180)',
+    'rgb(251, 154, 153)',
+    'rgb(253, 191, 111)',
+    'rgb(255, 127, 0)',
+    'rgb(202, 178, 214)',
+    'rgb(106, 61, 154)'
+  ];
 
-  const createOption = (data: PieChartData) => {
-    return {
-      // title: {
-      //   text: "A Case of Doughnut Chart",
-      //   left: "center",
-      // },
+  const doughnutGraphOptions: ChartOptions<"doughnut"> = {
+    plugins: {
       legend: {
-        type: "scroll",
-        orient: "vertical",
-        right: 0,
-        // x: 'right',
-        top: "center",
-        data: data.map((d) => d.name),
+        position: "right",
+        display: true
       },
-      series: [
-        {
-          type: "pie",
-          left: 0,
-          top: "center",
-          width: 200,
-          height: 200,
-          radius: ["40%", "70%"],
-          avoidLabelOverlap: false,
-          label: {
-            show: false,
-          },
-          labelLine: {
-            show: false,
-          },
-          emphasis: {
-            label: {
-              show: false,
-              fontSize: "14",
-              fontWeight: "bold",
-            },
-          },
-          data: data,
-        },
-      ],
-    };
+    },
+    layout: {
+      autoPadding: false,
+      padding: {
+        // right: 2
+      }
+    },
+    maintainAspectRatio: false, // Allows the chart to be responsive
+    aspectRatio: 1, // Adjust the aspect ratio to set the width
   };
-  const dataByAccountOptions = createOption(netSummaryDataByAccount);
-  const dataByTypeOptions = createOption(netSummaryDataByType);
+
+  const createDoughnutGraphData = (data: PieChartData): ChartData<"doughnut", number[], string> => {
+    return {
+      labels: data.map(d => d.name),
+      datasets: [
+        {
+          label: "account balance ($)",
+          data: data.map(d => d.value),
+          backgroundColor: matteColors,
+          hoverOffset: 4,
+        }
+      ],
+    }
+  }
+
+  const dataByAccountOptions = createDoughnutGraphData(netSummaryDataByAccount);
+  const dataByTypeOptions = createDoughnutGraphData(netSummaryDataByType);
 
   const [isDepositAccountSorted, setDepositSort] = useState(false);
 
@@ -78,18 +84,15 @@ function App() {
 
   const [navState, setNavState] = useState<NavState>("networth");
 
+
   function NetworthChart() {
-    return isDepositAccountSorted ? (
-      <ReactECharts
-        option={dataByAccountOptions}
-        style={{ height: 250, width: 500 }}
-      />
-    ) : (
-      <ReactECharts
-        option={dataByTypeOptions}
-        style={{ height: 250, width: 500 }}
-      />
-    );
+    const data = isDepositAccountSorted ? dataByAccountOptions : dataByTypeOptions;
+
+    return (
+        <div className="h-56 w-[30rem] pt-4 overflow-x-auto">
+          <Doughnut data={data} options={doughnutGraphOptions}/>
+        </div>
+    )
   }
 
   function BottomNav() {
