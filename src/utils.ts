@@ -1,11 +1,11 @@
 /**
- * Filters out numbers and dashes from a string.
+ * Filters out numbers, dashes and filler strings from a string.
  *
  * @param str - The input string to be filtered.
- * @returns The filtered string with numbers and dashes removed.
+ * @returns The filtered string.
  */
-export function filterNumbersAndDashes(str: string): string {
-  return str.replace(/[\d]|\s-/g, "").trim();
+export function filterOutFiller(str: string): string {
+  return str.replace(/Account|[\d]|\s-/g, "").trim();
 }
 
 /**
@@ -17,7 +17,7 @@ export function filterNumbersAndDashes(str: string): string {
  */
 export function querySelectText(e: Element | Document, query: string): string {
   const s = e.querySelector(query)?.textContent?.trim() ?? "";
-  return filterNumbersAndDashes(s);
+  return filterOutFiller(s);
 }
 
 /**

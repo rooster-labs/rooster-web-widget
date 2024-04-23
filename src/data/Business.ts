@@ -1,5 +1,5 @@
 import { sumBy } from "lodash";
-import { filterNumbersAndDashes } from "../utils.js";
+import { filterOutFiller } from "../utils.js";
 
 // Interface representing a collection of products indexed by a string key.
 export interface BusinessesData {
@@ -181,5 +181,5 @@ function createLabel(
   accountName: string,
   value: number,
 ): string {
-  return `${productName} ${filterNumbersAndDashes(accountName)} - $${value}`;
+  return `${productName} ${filterOutFiller(accountName)} - $${value}`;
 }

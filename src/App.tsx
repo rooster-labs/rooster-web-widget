@@ -43,8 +43,15 @@ function App() {
   const doughnutGraphOptions: ChartOptions<"doughnut"> = {
     plugins: {
       legend: {
+        display: true,
         position: "right",
-        display: true
+        align: "start",
+        maxWidth: 325,
+        labels: {
+          font: {
+            size: 12
+          }
+        }
       },
     },
     layout: {
@@ -53,8 +60,8 @@ function App() {
         // right: 2
       }
     },
-    maintainAspectRatio: false, // Allows the chart to be responsive
-    aspectRatio: 1, // Adjust the aspect ratio to set the width
+    maintainAspectRatio: true, // Allows the chart to be responsive
+    aspectRatio: 2.5, // Adjust the aspect ratio to set the width
   };
 
   const createDoughnutGraphData = (data: PieChartData): ChartData<"doughnut", number[], string> => {
@@ -89,7 +96,7 @@ function App() {
     const data = isDepositAccountSorted ? dataByAccountOptions : dataByTypeOptions;
 
     return (
-        <div className="h-56 w-[30rem] pt-4 overflow-x-auto">
+        <div className=" w-[30rem] pt-4 overflow-x-auto">
           <Doughnut data={data} options={doughnutGraphOptions}/>
         </div>
     )
