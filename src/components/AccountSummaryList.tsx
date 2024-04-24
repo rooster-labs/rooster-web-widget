@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Business, BusinessesData } from "../data/Business.js";
+import { AccountSummary, AccountSummaryData } from "../data/AccountSummaryData.js";
 import { AccountsList } from "./AccountsList.js";
-import { PlusIcon } from "./ManageBusinessesIcons.js";
+import { PlusIcon } from "./ManageAccountSummaryIcons.js";
 
 // Function Types
-export type AddBusinessFunction = (businessName: string) => void;
+export type AddAccountSumFunction = (businessName: string) => void;
 
 export type AddAccountFunction = (
   businessName: string,
@@ -24,38 +24,38 @@ export type EditAccountFunction = (
   balance: number,
 ) => void;
 
-interface AddBusinessProps {
-  onAddBusiness: AddBusinessFunction;
+interface AddAccountSummaryProps {
+  onAddAccountSummary: AddAccountSumFunction;
 };
 
-interface ManageBusinessProps {
-  business: Business;
+interface ManageAccountSummaryProps {
+  accountSummary: AccountSummary;
   onAddAccount: AddAccountFunction;
   onDeleteAccount: DeleteAccountFunction;
   onEditAccount: EditAccountFunction;
 }
 
-interface ManageBusinessesListProps {
-  businessData: BusinessesData;
-  onAddBusiness: AddBusinessFunction;
+interface ManageAccountSummaryDataProps {
+  accountSummaryData: AccountSummaryData;
+  onAddAccountSummary: AddAccountSumFunction;
   onAddAccount: AddAccountFunction;
   onDeleteAccount: DeleteAccountFunction;
   onEditAccount: EditAccountFunction;
 }
 
-function ManageBusiness({
-  business,
+function ManageAccountSummary({
+  accountSummary,
   onAddAccount,
   onDeleteAccount,
   onEditAccount,
-}: ManageBusinessProps) {
+}: ManageAccountSummaryProps) {
   return (
     <div className="collapse join-item collapse-arrow border border-base-300">
       <input type="checkbox" name="my-accordion-4" />
-      <div className="text-m collapse-title font-medium">{business.name}</div>
+      <div className="text-m collapse-title font-medium">{accountSummary.businessName}</div>
       <div className="collapse-content">
         <AccountsList
-          business={business}
+          business={accountSummary}
           onAddAccount={onAddAccount}
           onEditAccount={onEditAccount}
           onDeleteAccount={onDeleteAccount}
@@ -65,11 +65,11 @@ function ManageBusiness({
   );
 }
 
-function AddBusiness({ onAddBusiness }: AddBusinessProps) {
+function AddAccountSummary({ onAddAccountSummary: onAddAccountSummary }: AddAccountSummaryProps) {
   const [name, setName] = useState("");
-  const handleOnAddBusiness = () => {
+  const handleAddAccountSummary = () => {
     if (name.trim()) {
-      onAddBusiness(name);
+      onAddAccountSummary(name);
       setName("");
     }
   };
@@ -79,13 +79,13 @@ function AddBusiness({ onAddBusiness }: AddBusinessProps) {
       <input
         type="text"
         value={name}
-        placeholder="Add New Business"
+        placeholder="Add New Account Summary"
         onChange={(e) => setName(e.target.value)}
         className="input input-sm input-ghost m-2 w-full max-w-xs"
       />
       <button
         className="btn btn-circle btn-ghost btn-xs mr-3 items-center"
-        onClick={handleOnAddBusiness}
+        onClick={handleAddAccountSummary}
       >
         <PlusIcon />
       </button>
@@ -93,22 +93,22 @@ function AddBusiness({ onAddBusiness }: AddBusinessProps) {
   );
 }
 
-export function ManageBusinessesList({
-  businessData,
-  onAddBusiness,
+export function ManageAccountSummaryList({
+  accountSummaryData,
+  onAddAccountSummary,
   onAddAccount,
   onDeleteAccount,
   onEditAccount,
-}: ManageBusinessesListProps) {
-  const businessesList = Object.values(businessData);
+}: ManageAccountSummaryDataProps) {
+  const accountSummaryList = Object.values(accountSummaryData);
 
   return (
     <div className="join join-vertical w-full">
       <ul>
-        {businessesList.map((business) => (
-          <li key={business.name}>
-            <ManageBusiness
-              business={business}
+        {accountSummaryList.map((accountSum) => (
+          <li key={accountSum.businessName}>
+            <ManageAccountSummary
+              accountSummary={accountSum}
               onAddAccount={onAddAccount}
               onEditAccount={onEditAccount}
               onDeleteAccount={onDeleteAccount}
@@ -116,7 +116,7 @@ export function ManageBusinessesList({
           </li>
         ))}
       </ul>
-      <AddBusiness onAddBusiness={onAddBusiness} />
+      <AddAccountSummary onAddAccountSummary={onAddAccountSummary} />
     </div>
   );
 }

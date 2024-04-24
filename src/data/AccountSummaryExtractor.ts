@@ -1,13 +1,13 @@
-import { Account, Business } from "./Business.js";
+import { Account, AccountSummary } from "./AccountSummaryData.js";
 
-export abstract class ProductSummaryExtractor {
+export abstract class AccountSummaryExtractor {
   abstract name: string;
 
   abstract extractAccountDetails(): Account[];
 
-  createProduct(): Business {
+  createProduct(): AccountSummary {
     return {
-      name: this.name,
+      businessName: this.name,
       accounts: this.extractAccountDetails(),
     };
   }

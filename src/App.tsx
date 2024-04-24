@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import ManageBusinesses from "./components/ManageBusinesses.js";
+import ManageBusinesses from "./components/ManageAccountSummaryData.js";
 import "./App.css";
 import {
-  BusinessesData,
+  AccountSummaryData,
   getNetSummaryDataByAccount,
   getNetSummaryDataByType,
   calcNetWorth,
-} from "./data/Business.js";
+} from "./data/AccountSummaryData.js";
 import { Doughnut } from "react-chartjs-2";
 import { ArcElement, Chart, ChartData, ChartOptions, Legend, Tooltip } from "chart.js";
 
@@ -16,7 +16,7 @@ type PieChartData = Array<{ name: string; value: number }>;
 
 function App() {
   Chart.register(ArcElement, Tooltip, Legend);
-  const [businessData, setBusinessData] = useState<BusinessesData>();
+  const [businessData, setBusinessData] = useState<AccountSummaryData>();
 
   useEffect(() => {
     chrome.storage.local.get(null, (data) => {

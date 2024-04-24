@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { DollarIcon, PlusIcon, TrashIcon } from "./ManageBusinessesIcons.js";
+import { DollarIcon, PlusIcon, TrashIcon } from "./ManageAccountSummaryIcons.js";
 import {
   AddAccountFunction,
   DeleteAccountFunction,
   EditAccountFunction,
-} from "./BusinessesList.js";
-import { Account, Business } from "../data/Business.js";
+} from "./AccountSummaryList.js";
+import { Account, AccountSummary } from "../data/AccountSummaryData.js";
 import React from "react";
 
 interface AddAccountProps {
@@ -21,7 +21,7 @@ interface ManageAccountProps {
 }
 
 interface AccountListProps {
-  business: Business;
+  business: AccountSummary;
   onDeleteAccount: DeleteAccountFunction;
   onEditAccount: EditAccountFunction;
   onAddAccount: AddAccountFunction;
@@ -134,7 +134,7 @@ export function AccountsList({
         {business.accounts.map((account) => (
           <li key={account.accountName}>
             <ManageAccount
-              businessName={business.name}
+              businessName={business.businessName}
               account={account}
               onEditAccount={onEditAccount}
               onDeleteAccount={onDeleteAccount}
@@ -143,7 +143,7 @@ export function AccountsList({
         ))}
         <li key="add-account">
           <AddAccount
-            businessName={business.name}
+            businessName={business.businessName}
             onAddAccount={onAddAccount}
           />
         </li>

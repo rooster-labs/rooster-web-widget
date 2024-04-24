@@ -1,12 +1,12 @@
 import React from "react";
 import { useImmerReducer } from "use-immer";
-import { BusinessesData } from "../data/Business.js";
-import { ManageBusinessesList } from "./BusinessesList.js";
-import { businessDataReducer } from "./BusinessReducer.js";
+import { AccountSummaryData } from "../data/AccountSummaryData.js";
+import { ManageAccountSummaryList } from "./AccountSummaryList.js";
+import { AccountSummaryDataReducer } from "./AccountSummaryDataReducer.js";
 
 interface ManageBusinessesProp {
-  initBusinessData: BusinessesData | undefined;
-  setBusinessData: (businessData: BusinessesData) => void;
+  initBusinessData: AccountSummaryData | undefined;
+  setBusinessData: (businessData: AccountSummaryData) => void;
 }
 
 function ManageBusinesses({
@@ -14,13 +14,13 @@ function ManageBusinesses({
   setBusinessData,
 }: ManageBusinessesProp) {
   const [businessData, dispatch] = useImmerReducer(
-    businessDataReducer,
+    AccountSummaryDataReducer,
     initBusinessData ?? {},
   );
 
   function handleAddBusiness(businessName: string) {
     dispatch({
-      type: "addBusiness",
+      type: "addAccountSummary",
       businessName: businessName,
     });
   }
@@ -64,9 +64,9 @@ function ManageBusinesses({
   return (
     <div className="h-64 overflow-y-scroll">
       <h2 className="text-m">Manage Businesses</h2>
-      <ManageBusinessesList
-        businessData={businessData}
-        onAddBusiness={handleAddBusiness}
+      <ManageAccountSummaryList
+        accountSummaryData={businessData}
+        onAddAccountSummary={handleAddBusiness}
         onAddAccount={handleAddAccount}
         onEditAccount={handleEditAccount}
         onDeleteAccount={handleDeleteAccount}

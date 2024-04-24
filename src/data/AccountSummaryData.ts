@@ -2,13 +2,13 @@ import { sumBy } from "lodash";
 import { filterOutFiller } from "../utils.js";
 
 // Interface representing a collection of products indexed by a string key.
-export interface BusinessesData {
-  [key: string]: Business; // Key-value pairs where the key is a string and the value is a Product.
+export interface AccountSummaryData {
+  [key: string]: AccountSummary; // Key-value pairs where the key is a string and the value is a Product.
 }
 
-// Interface for the structure of a Product.
-export interface Business {
-  name: string; // The name of the product.
+// Interface for the structure of a Business.
+export interface AccountSummary {
+  businessName: string; // The name of the Business.
   accounts: Account[]; // An array of Account objects associated with the product.
 }
 
@@ -98,7 +98,9 @@ export function findAllAccountType(accountName: string): string[] {
  * @param productData - An optional ProductsData object containing information about various products and their accounts.
  * @returns The total net worth as a number. Returns 0 if no product data is provided.
  */
-export function calcNetWorth(productData: BusinessesData | undefined): number {
+export function calcNetWorth(
+  productData: AccountSummaryData | undefined,
+): number {
   if (productData) {
     const productList = Object.values(productData);
     return sumBy(productList, (p) => sumBy(p.accounts, (a) => a.balance));
@@ -120,16 +122,16 @@ function getAllDepositAccounts(accounts: Account[]): Account[] {
 /**
  * Generates a summary data array from the product data, containing labels and values for each account.
  *
- * @param productData - An optional ProductsData object containing information about various products and their accounts.
+ * @param accountSummaryData - An optional ProductsData object containing information about various products and their accounts.
  * @returns An array of objects, each with a 'name' and 'value' property, representing each account. Sorted by value in descending order.
  */
 export function getNetSummaryDataByAccount(
-  productData: BusinessesData | undefined,
+  accountSummaryData: AccountSummaryData | undefined,
 ): Array<{ name: string; value: number }> {
-  if (productData) {
-    return Object.values(productData).flatMap((p) =>
+  if (accountSummaryData) {
+    return Object.values(accountSummaryData).flatMap((p) =>
       getAllDepositAccounts(p.accounts).map((a) => ({
-        name: createLabel(p.name, a.accountName, a.balance),
+        name: createLabel(p.businessName, a.accountName, a.balance),
         value: a.balance,
       }))
     ).sort((a, b) => b.value - a.value);
@@ -139,10 +141,10 @@ export function getNetSummaryDataByAccount(
 }
 
 export function getNetSummaryDataByType(
-  productData: BusinessesData | undefined,
+  accountSummaryData: AccountSummaryData | undefined,
 ): Array<{ name: string; value: number }> {
-  if (productData) {
-    const depositAccounts = Object.values(productData).flatMap((p) =>
+  if (accountSummaryData) {
+    const depositAccounts = Object.values(accountSummaryData).flatMap((p) =>
       getAllDepositAccounts(p.accounts)
     );
     const depositTypeToValue = new Map<string, number>();

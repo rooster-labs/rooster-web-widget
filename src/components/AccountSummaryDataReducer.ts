@@ -1,15 +1,18 @@
-import { BusinessesData, findAllAccountType } from "../data/Business.js";
+import {
+  AccountSummaryData,
+  findAllAccountType,
+} from "../data/AccountSummaryData.js";
 
-export type BusinessesDataActionTypes =
-  | "addBusiness"
-  | "deleteBusiness"
+export type ManageAccountsActionTypes =
+  | "addAccountSummary"
+  | "deleteAccountSummary"
   | "editBusinessName"
   | "addAccount"
   | "deleteAccount"
   | "editAccount";
 
-export type BusinessesDataAction = {
-  type: BusinessesDataActionTypes;
+export type ManageAccountsAction = {
+  type: ManageAccountsActionTypes;
   businessName: string;
   newBusinessName?: string;
   accountName?: string;
@@ -18,10 +21,10 @@ export type BusinessesDataAction = {
   newBalance?: number;
 };
 
-export function businessDataReducer(
-  state: BusinessesData,
-  action: BusinessesDataAction,
-): BusinessesData {
+export function AccountSummaryDataReducer(
+  state: AccountSummaryData,
+  action: ManageAccountsAction,
+): AccountSummaryData {
   const {
     type,
     businessName,
@@ -37,19 +40,19 @@ export function businessDataReducer(
   }
 
   switch (type) {
-    case "addBusiness":
+    case "addAccountSummary":
       if (!state[businessName]) {
-        state[businessName] = { name: businessName, accounts: [] };
+        state[businessName] = { businessName: businessName, accounts: [] };
       }
       break;
 
-    case "deleteBusiness":
+    case "deleteAccountSummary":
       delete state[businessName];
       break;
 
     case "editBusinessName":
       if (newBusinessName && state[businessName]) {
-        state[businessName].name = newBusinessName;
+        state[businessName].businessName = newBusinessName;
       }
       break;
 

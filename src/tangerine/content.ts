@@ -1,8 +1,8 @@
-import { Account, findAllAccountType } from "../data/Business.js";
-import { ProductSummaryExtractor } from "../data/ProductSummaryExtractor.js";
+import { Account, findAllAccountType } from "../data/AccountSummaryData.js";
+import { AccountSummaryExtractor } from "../data/AccountSummaryExtractor.js";
 import { querySelectNumber, querySelectText } from "../utils.js";
 
-class TangerineAccountSummaryExtractor extends ProductSummaryExtractor {
+class TangerineAccountSummaryExtractor extends AccountSummaryExtractor {
   name = "Tangerine";
 
   extractAccountDetails(): Account[] {

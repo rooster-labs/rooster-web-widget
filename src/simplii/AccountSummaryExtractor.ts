@@ -1,8 +1,8 @@
-import { Account, findAllAccountType } from "../data/Business.js";
-import { ProductSummaryExtractor } from "../data/ProductSummaryExtractor.js";
+import { Account, findAllAccountType } from "../data/AccountSummaryData.js";
+import { AccountSummaryExtractor } from "../data/AccountSummaryExtractor.js";
 import { querySelectNumber, querySelectText } from "../utils.js";
 
-export class SimpliiAccountSummaryExtractor extends ProductSummaryExtractor {
+export class SimpliiAccountSummaryExtractor extends AccountSummaryExtractor {
   name = "Simplii";
   type = "Bank";
 
