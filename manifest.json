@@ -8,7 +8,7 @@
     "128": "images/Scrooge Boc Boc 128.png"
   },
   "version": "1.0.0",
-  "permissions": [ "storage" ],
+  "permissions": ["storage"],
   "action": { "default_popup": "index.html" },
   "background": {
     "service_worker": "src/scripts/background.ts",
@@ -17,22 +17,18 @@
   "content_scripts": [
     {
       "js": ["src/simplii/content.ts"],
-      "matches": [
-        "https://online.simplii.com/*"
-      ]
+      "matches": ["https://online.simplii.com/*"]
     },
     {
       "js": ["src/questrade/content.ts"],
-      "matches": [
-        "https://my.questrade.com/clients/en/my_home"
-      ]
+      "matches": ["https://my.questrade.com/clients/en/my_home"]
     },
     {
       "js": ["src/tangerine/content.ts"],
       "matches": ["https://www.tangerine.ca/app/*"]
     },
     {
-      "js" : ["src/wealthsimple/content.ts"],
+      "js": ["src/wealthsimple/content.ts"],
       "matches": ["https://my.wealthsimple.com/app/home"]
     }
   ]

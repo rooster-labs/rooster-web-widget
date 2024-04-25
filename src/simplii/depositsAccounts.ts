@@ -25,11 +25,11 @@ type TransactionData = Array<Transactions>;
 function getTombstoneText(
   boxIdx: number,
   divIdx: number,
-  spanIdx: number
+  spanIdx: number,
 ): string {
   return querySelectText(
     document,
-    `.tombstone .box-medium:nth-of-type(${boxIdx}) div:nth-of-type(${divIdx}) span:nth-child(${spanIdx})`
+    `.tombstone .box-medium:nth-of-type(${boxIdx}) div:nth-of-type(${divIdx}) span:nth-child(${spanIdx})`,
   );
 }
 
@@ -38,7 +38,7 @@ function getTombStoneSmallBoxText(boxIdx: number): string {
   return (
     querySelectText(
       document,
-      `.tombstone .box-small:nth-child(${boxIdx}) em`
+      `.tombstone .box-small:nth-child(${boxIdx}) em`,
     )?.replace(/[^0-9.-]+/g, "") || "0"
   );
 }

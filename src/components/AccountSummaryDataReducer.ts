@@ -58,7 +58,8 @@ export function AccountSummaryDataReducer(
 
     case "addAccount":
       if (
-        accountName && balance !== undefined &&
+        accountName &&
+        balance !== undefined &&
         !state[businessName].accounts.find((a) => a.accountName === accountName)
       ) {
         state[businessName].accounts.push({
@@ -79,8 +80,8 @@ export function AccountSummaryDataReducer(
 
     case "editAccount":
       if (accountName) {
-        const account = state[businessName].accounts.find((a) =>
-          a.accountName === accountName
+        const account = state[businessName].accounts.find(
+          (a) => a.accountName === accountName,
         );
         if (account) {
           account.accountName = newAccountName ?? account.accountName;

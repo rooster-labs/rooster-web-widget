@@ -9,33 +9,38 @@ import {
   getAccountSummaryData,
 } from "./data/AccountSummaryData.js";
 import { Doughnut } from "react-chartjs-2";
-import { ArcElement, Chart, ChartData, ChartOptions, Legend, Tooltip } from "chart.js";
+import {
+  ArcElement,
+  Chart,
+  ChartData,
+  ChartOptions,
+  Legend,
+  Tooltip,
+} from "chart.js";
 
 type PieChartData = Array<{ name: string; value: number }>;
-
-
 
 function App() {
   Chart.register(ArcElement, Tooltip, Legend);
   const [businessData, setBusinessData] = useState<AccountSummaryData>();
 
   useEffect(() => {
-    getAccountSummaryData().then(data => setBusinessData(data));
+    getAccountSummaryData().then((data) => setBusinessData(data));
   }, []);
 
   const netSummaryDataByAccount = getNetSummaryDataByAccount(businessData);
   const netSummaryDataByType = getNetSummaryDataByType(businessData);
   const matteColors: string[] = [
-    'rgb(166, 206, 227)',
-    'rgb(178, 223, 138)',
-    'rgb(227, 26, 28)',
-    'rgb(51, 160, 44)',
-    'rgb(31, 120, 180)',
-    'rgb(251, 154, 153)',
-    'rgb(253, 191, 111)',
-    'rgb(255, 127, 0)',
-    'rgb(202, 178, 214)',
-    'rgb(106, 61, 154)'
+    "rgb(166, 206, 227)",
+    "rgb(178, 223, 138)",
+    "rgb(227, 26, 28)",
+    "rgb(51, 160, 44)",
+    "rgb(31, 120, 180)",
+    "rgb(251, 154, 153)",
+    "rgb(253, 191, 111)",
+    "rgb(255, 127, 0)",
+    "rgb(202, 178, 214)",
+    "rgb(106, 61, 154)",
   ];
 
   const doughnutGraphOptions: ChartOptions<"doughnut"> = {
@@ -47,34 +52,36 @@ function App() {
         maxWidth: 325,
         labels: {
           font: {
-            size: 12
-          }
-        }
+            size: 12,
+          },
+        },
       },
     },
     layout: {
       autoPadding: false,
       padding: {
         // right: 2
-      }
+      },
     },
     maintainAspectRatio: true, // Allows the chart to be responsive
     aspectRatio: 2.5, // Adjust the aspect ratio to set the width
   };
 
-  const createDoughnutGraphData = (data: PieChartData): ChartData<"doughnut", number[], string> => {
+  const createDoughnutGraphData = (
+    data: PieChartData,
+  ): ChartData<"doughnut", number[], string> => {
     return {
-      labels: data.map(d => d.name),
+      labels: data.map((d) => d.name),
       datasets: [
         {
           label: "account balance ($)",
-          data: data.map(d => d.value),
+          data: data.map((d) => d.value),
           backgroundColor: matteColors,
           hoverOffset: 4,
-        }
+        },
       ],
-    }
-  }
+    };
+  };
 
   const dataByAccountOptions = createDoughnutGraphData(netSummaryDataByAccount);
   const dataByTypeOptions = createDoughnutGraphData(netSummaryDataByType);
@@ -89,15 +96,16 @@ function App() {
 
   const [navState, setNavState] = useState<NavState>("networth");
 
-
   function NetworthChart() {
-    const data = isDepositAccountSorted ? dataByAccountOptions : dataByTypeOptions;
+    const data = isDepositAccountSorted
+      ? dataByAccountOptions
+      : dataByTypeOptions;
 
     return (
-        <div className=" w-[30rem] pt-4 overflow-x-auto">
-          <Doughnut data={data} options={doughnutGraphOptions}/>
-        </div>
-    )
+      <div className=" w-[30rem] overflow-x-auto pt-4">
+        <Doughnut data={data} options={doughnutGraphOptions} />
+      </div>
+    );
   }
 
   function BottomNav() {

@@ -14,12 +14,12 @@ function locationHashChanged() {
       } else if (locationHash.startsWith("#/accounts/credit-cards/")) {
         logCreditCardData();
       } else {
-        new SimpliiAccountSummaryExtractor().onLoad()
+        new SimpliiAccountSummaryExtractor().onLoad();
       }
     }
   }, 4000);
 }
 
-locationHashChanged()
+locationHashChanged();
 
 window.onhashchange = locationHashChanged;

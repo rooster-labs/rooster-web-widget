@@ -31,9 +31,12 @@ export function querySelectNumber(
   e: Element | Document,
   query: string,
 ): number {
-  const textContent = e.querySelector(query)?.textContent?.trim()
-    .replace(/[,$]/g, "")
-    .replace("−", "-") ?? "";
+  const textContent =
+    e
+      .querySelector(query)
+      ?.textContent?.trim()
+      .replace(/[,$]/g, "")
+      .replace("−", "-") ?? "";
 
   return parseFloat(textContent);
 }

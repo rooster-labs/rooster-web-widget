@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import { AccountSummary, AccountSummaryData } from "../data/AccountSummaryData.js";
+import {
+  AccountSummary,
+  AccountSummaryData,
+} from "../data/AccountSummaryData.js";
 import { AccountsList } from "./AccountsList.js";
 import { PlusIcon } from "./ManageAccountSummaryIcons.js";
 
@@ -26,7 +29,7 @@ export type EditAccountFunction = (
 
 interface AddAccountSummaryProps {
   onAddAccountSummary: AddAccountSumFunction;
-};
+}
 
 interface ManageAccountSummaryProps {
   accountSummary: AccountSummary;
@@ -52,7 +55,9 @@ function ManageAccountSummary({
   return (
     <div className="collapse join-item collapse-arrow border border-base-300">
       <input type="checkbox" name="my-accordion-4" />
-      <div className="text-m collapse-title font-medium">{accountSummary.businessName}</div>
+      <div className="text-m collapse-title font-medium">
+        {accountSummary.businessName}
+      </div>
       <div className="collapse-content">
         <AccountsList
           business={accountSummary}
@@ -65,7 +70,9 @@ function ManageAccountSummary({
   );
 }
 
-function AddAccountSummary({ onAddAccountSummary: onAddAccountSummary }: AddAccountSummaryProps) {
+function AddAccountSummary({
+  onAddAccountSummary: onAddAccountSummary,
+}: AddAccountSummaryProps) {
   const [name, setName] = useState("");
   const handleAddAccountSummary = () => {
     if (name.trim()) {

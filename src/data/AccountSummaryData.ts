@@ -26,8 +26,9 @@ export interface Account {
 
 export async function getAccountSummaryData(): Promise<AccountSummaryData> {
   let data: AccountSummaryData = {};
-  await chrome.storage.local.get([ACCOUNT_SUMMARY_DATA])
-    .then((res) => data = res[ACCOUNT_SUMMARY_DATA] ?? {});
+  await chrome.storage.local
+    .get([ACCOUNT_SUMMARY_DATA])
+    .then((res) => (data = res[ACCOUNT_SUMMARY_DATA] ?? {}));
   console.log("Get Account Summary Data", data);
   return data;
 }
@@ -38,7 +39,8 @@ export async function updateAccountSummary(
   const newAccountSummary = { [accountSummary.businessName]: accountSummary };
   console.log("Update Account Summary", accountSummary);
 
-  await chrome.storage.local.get([ACCOUNT_SUMMARY_DATA])
+  await chrome.storage.local
+    .get([ACCOUNT_SUMMARY_DATA])
     .then((data) => data?.accountSummaryData ?? {})
     .then((d) => Object.assign(d, newAccountSummary))
     .then((d) => setAccountSummaryData(d));
@@ -108,9 +110,7 @@ export function findAllAccountType(accountName: string): string[] {
 
   if (!isDeposit) {
     creditClassifier.forEach((c) => {
-      if (
-        lowerCaseName.includes(c)
-      ) {
+      if (lowerCaseName.includes(c)) {
         if (creditCardClassifier.has(c)) {
           accountTypeList.push("credit card");
         } else {
@@ -142,8 +142,8 @@ export function calcNetWorth(
 
 function getAllDepositAccounts(accounts: Account[]): Account[] {
   if (accounts) {
-    return accounts.filter((a) =>
-      a.types.length > 0 && depositClassifier.has(a.types[0])
+    return accounts.filter(
+      (a) => a.types.length > 0 && depositClassifier.has(a.types[0]),
     );
   } else {
     return [];
@@ -160,12 +160,14 @@ export function getNetSummaryDataByAccount(
   accountSummaryData: AccountSummaryData | undefined,
 ): Array<{ name: string; value: number }> {
   if (accountSummaryData) {
-    return Object.values(accountSummaryData).flatMap((p) =>
-      getAllDepositAccounts(p.accounts).map((a) => ({
-        name: createLabel(p.businessName, a.accountName, a.balance),
-        value: a.balance,
-      }))
-    ).sort((a, b) => b.value - a.value);
+    return Object.values(accountSummaryData)
+      .flatMap((p) =>
+        getAllDepositAccounts(p.accounts).map((a) => ({
+          name: createLabel(p.businessName, a.accountName, a.balance),
+          value: a.balance,
+        })),
+      )
+      .sort((a, b) => b.value - a.value);
   } else {
     return [];
   }
@@ -176,7 +178,7 @@ export function getNetSummaryDataByType(
 ): Array<{ name: string; value: number }> {
   if (accountSummaryData) {
     const depositAccounts = Object.values(accountSummaryData).flatMap((p) =>
-      getAllDepositAccounts(p.accounts)
+      getAllDepositAccounts(p.accounts),
     );
     const depositTypeToValue = new Map<string, number>();
 

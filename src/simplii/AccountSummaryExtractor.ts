@@ -23,7 +23,7 @@ export class SimpliiAccountSummaryExtractor extends AccountSummaryExtractor {
             balance: querySelectNumber(row, ".balance"),
           });
         }
-      })
+      }),
     );
 
     return accountSummaryList;

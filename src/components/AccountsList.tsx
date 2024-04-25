@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { DollarIcon, PlusIcon, TrashIcon } from "./ManageAccountSummaryIcons.js";
+import {
+  DollarIcon,
+  PlusIcon,
+  TrashIcon,
+} from "./ManageAccountSummaryIcons.js";
 import {
   AddAccountFunction,
   DeleteAccountFunction,
