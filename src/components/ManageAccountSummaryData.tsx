@@ -1,22 +1,27 @@
-import React from "react";
-import { useImmerReducer } from "use-immer";
-import { AccountSummaryData } from "../data/AccountSummaryData.js";
+import React, { useEffect } from "react";
+import {
+  AccountSummaryData,
+  setAccountSummaryData,
+} from "../data/AccountSummaryData.js";
 import { ManageAccountSummaryList } from "./AccountSummaryList.js";
-import { AccountSummaryDataReducer } from "./AccountSummaryDataReducer.js";
+import { ManageAccountsAction } from "./AccountSummaryDataReducer.js";
 
-interface ManageBusinessesProp {
-  initBusinessData: AccountSummaryData | undefined;
-  setBusinessData: (businessData: AccountSummaryData) => void;
+interface ManageAccountSumDataProp {
+  accountSummaryReducer: [
+    AccountSummaryData,
+    React.Dispatch<ManageAccountsAction>,
+  ];
 }
 
-function ManageBusinesses({
-  initBusinessData,
-  setBusinessData,
-}: ManageBusinessesProp) {
-  const [businessData, dispatch] = useImmerReducer(
-    AccountSummaryDataReducer,
-    initBusinessData ?? {},
-  );
+function ManageAccountSummaryData({
+  accountSummaryReducer,
+}: ManageAccountSumDataProp) {
+  const [accountSummaryData, dispatch] = accountSummaryReducer;
+
+  useEffect(() => {
+    console.log("manage Account", accountSummaryData);
+    setAccountSummaryData(accountSummaryData);
+  }, [accountSummaryData]);
 
   function handleAddBusiness(businessName: string) {
     dispatch({
@@ -65,7 +70,7 @@ function ManageBusinesses({
     <div className="h-64 overflow-y-scroll">
       <h2 className="text-m">Manage Businesses</h2>
       <ManageAccountSummaryList
-        accountSummaryData={businessData}
+        accountSummaryData={accountSummaryData}
         onAddAccountSummary={handleAddBusiness}
         onAddAccount={handleAddAccount}
         onEditAccount={handleEditAccount}
@@ -75,4 +80,4 @@ function ManageBusinesses({
   );
 }
 
-export default ManageBusinesses;
+export default ManageAccountSummaryData;

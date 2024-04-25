@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import ManageBusinesses from "./components/ManageAccountSummaryData.js";
+import { useState, useEffect, useMemo } from "react";
+import ManageAccountSummaryData from "./components/ManageAccountSummaryData.js";
 import "./App.css";
 import {
   AccountSummaryData,
@@ -17,19 +17,34 @@ import {
   Legend,
   Tooltip,
 } from "chart.js";
+import { useImmerReducer } from "use-immer";
+import { AccountSummaryDataReducer, ManageAccountsAction } from "./components/AccountSummaryDataReducer.js";
 
 type PieChartData = Array<{ name: string; value: number }>;
 
 function App() {
   Chart.register(ArcElement, Tooltip, Legend);
-  const [businessData, setBusinessData] = useState<AccountSummaryData>();
+
+
+  const accountSummaryReducer = useImmerReducer<AccountSummaryData ,ManageAccountsAction>(
+    AccountSummaryDataReducer,
+    {},
+  );
+  const [accountSummaryData, dispatch] = accountSummaryReducer
+
 
   useEffect(() => {
-    getAccountSummaryData().then((data) => setBusinessData(data));
+    getAccountSummaryData().then((data) => {
+      dispatch({
+        type: "setData",
+        businessName: "setData",
+        data: data
+      })
+    });
   }, []);
 
-  const netSummaryDataByAccount = getNetSummaryDataByAccount(businessData);
-  const netSummaryDataByType = getNetSummaryDataByType(businessData);
+  const netSummaryDataByAccount = getNetSummaryDataByAccount(accountSummaryData);
+  const netSummaryDataByType = getNetSummaryDataByType(accountSummaryData);
   const matteColors: string[] = [
     "rgb(166, 206, 227)",
     "rgb(178, 223, 138)",
@@ -169,16 +184,15 @@ function App() {
   function NavView() {
     if (navState == "manage-business") {
       return (
-        <ManageBusinesses
-          initBusinessData={businessData}
-          setBusinessData={setBusinessData}
+        <ManageAccountSummaryData
+          accountSummaryReducer={accountSummaryReducer}
         />
       );
     } else {
       return (
         <>
           <div className="flex justify-between text-base">
-            <h2>Net Worth: {calcNetWorth(businessData).toFixed(2)}</h2>
+            <h2>Net Worth: {calcNetWorth(accountSummaryData).toFixed(2)}</h2>
             <button onClick={handleToggle}>Deposit Types / Accounts</button>
           </div>
           <NetworthChart />

@@ -9,7 +9,8 @@ export type ManageAccountsActionTypes =
   | "editBusinessName"
   | "addAccount"
   | "deleteAccount"
-  | "editAccount";
+  | "editAccount"
+  | "setData";
 
 export type ManageAccountsAction = {
   type: ManageAccountsActionTypes;
@@ -18,7 +19,7 @@ export type ManageAccountsAction = {
   accountName?: string;
   newAccountName?: string;
   balance?: number;
-  newBalance?: number;
+  data?: AccountSummaryData;
 };
 
 export function AccountSummaryDataReducer(
@@ -32,6 +33,7 @@ export function AccountSummaryDataReducer(
     accountName,
     newAccountName,
     balance,
+    data,
   } = action;
 
   // Validate businessName
@@ -87,6 +89,11 @@ export function AccountSummaryDataReducer(
           account.accountName = newAccountName ?? account.accountName;
           account.balance = balance ?? account.balance;
         }
+      }
+      break;
+    case "setData":
+      if (data) {
+        state = data;
       }
       break;
   }
