@@ -6,6 +6,7 @@ import {
   getNetSummaryDataByAccount,
   getNetSummaryDataByType,
   calcNetWorth,
+  getAccountSummaryData,
 } from "./data/AccountSummaryData.js";
 import { Doughnut } from "react-chartjs-2";
 import { ArcElement, Chart, ChartData, ChartOptions, Legend, Tooltip } from "chart.js";
@@ -19,10 +20,7 @@ function App() {
   const [businessData, setBusinessData] = useState<AccountSummaryData>();
 
   useEffect(() => {
-    chrome.storage.local.get(null, (data) => {
-      console.log("Stored data:", data);
-      setBusinessData(data);
-    });
+    getAccountSummaryData().then(data => setBusinessData(data));
   }, []);
 
   const netSummaryDataByAccount = getNetSummaryDataByAccount(businessData);

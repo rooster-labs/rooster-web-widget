@@ -1,6 +1,7 @@
 import { sumBy } from "lodash";
 import { filterOutFiller } from "../utils.js";
 
+export const ACCOUNT_SUMMARY_DATA = "accountSummaryData";
 // Interface representing a collection of products indexed by a string key.
 export interface AccountSummaryData {
   [key: string]: AccountSummary; // Key-value pairs where the key is a string and the value is a Product.
@@ -23,6 +24,35 @@ export interface Account {
   transactions?: Array<any>; // An array of transactions associated with the account (optional, type can be specified more explicitly than `any` if known).
 }
 
+export async function getAccountSummaryData(): Promise<AccountSummaryData> {
+  let data: AccountSummaryData = {};
+  await chrome.storage.local.get([ACCOUNT_SUMMARY_DATA])
+    .then((res) => data = res[ACCOUNT_SUMMARY_DATA] ?? {});
+  console.log("Get Account Summary Data", data);
+  return data;
+}
+
+export async function updateAccountSummary(
+  accountSummary: AccountSummary,
+): Promise<void> {
+  const newAccountSummary = { [accountSummary.businessName]: accountSummary };
+  console.log("Update Account Summary", accountSummary);
+
+  await chrome.storage.local.get([ACCOUNT_SUMMARY_DATA])
+    .then((data) => data?.accountSummaryData ?? {})
+    .then((d) => Object.assign(d, newAccountSummary))
+    .then((d) => setAccountSummaryData(d));
+}
+
+export async function setAccountSummaryData(
+  accountSummaryData: AccountSummaryData,
+): Promise<void> {
+  console.log("Set Account Summary", accountSummaryData);
+  await chrome.storage.local.set({
+    [ACCOUNT_SUMMARY_DATA]: accountSummaryData,
+  });
+}
+
 // TODO: Create a deposit types Set. Then a seperate Map for type to classifier
 
 const depositClassifier = new Set([
@@ -30,6 +60,7 @@ const depositClassifier = new Set([
   "crypto",
   "fhsa",
   "rrsp",
+  "rsp",
   "savings",
   "tfsa",
   "non-registered",
@@ -60,7 +91,7 @@ export function findAllAccountType(accountName: string): string[] {
   let isDeposit = false;
 
   depositClassifier.forEach((c) => {
-    if (lowerCaseName.includes(c) || lowerCaseName.includes(c.toUpperCase())) {
+    if (lowerCaseName.includes(c)) {
       if (rrspClassifier.has(c)) {
         accountTypeList.push("rrsp");
       } else {
@@ -78,7 +109,7 @@ export function findAllAccountType(accountName: string): string[] {
   if (!isDeposit) {
     creditClassifier.forEach((c) => {
       if (
-        lowerCaseName.includes(c) || lowerCaseName.includes(c.toUpperCase())
+        lowerCaseName.includes(c)
       ) {
         if (creditCardClassifier.has(c)) {
           accountTypeList.push("credit card");

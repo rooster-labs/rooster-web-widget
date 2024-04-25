@@ -1,11 +1,15 @@
-import { Account, AccountSummary } from "./AccountSummaryData.js";
+import {
+  Account,
+  AccountSummary,
+  updateAccountSummary,
+} from "./AccountSummaryData.js";
 
 export abstract class AccountSummaryExtractor {
   abstract name: string;
 
   abstract extractAccountDetails(): Account[];
 
-  createProduct(): AccountSummary {
+  createSummary(): AccountSummary {
     return {
       businessName: this.name,
       accounts: this.extractAccountDetails(),
@@ -14,10 +18,9 @@ export abstract class AccountSummaryExtractor {
 
   onLoad(timeout: number = 4000) {
     setTimeout(() => {
-      console.log(`${this.name} Summary Page`);
-      const productData = this.createProduct();
-      chrome.storage.local.set({ [this.name]: productData });
-      console.log(productData);
+      const accountSummary = this.createSummary();
+      updateAccountSummary(accountSummary);
+      console.log(`${this.name} Summary Page`, { accountSummary });
     }, timeout);
   }
 }
