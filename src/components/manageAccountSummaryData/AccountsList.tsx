@@ -9,8 +9,7 @@ import {
   DeleteAccountFunction,
   EditAccountFunction,
 } from "./AccountSummaryList.js";
-import { Account, AccountSummary } from "../data/AccountSummaryData.js";
-import React from "react";
+import { Account, AccountSummary } from "../../data/AccountSummaryData.js";
 
 interface AddAccountProps {
   onAddAccount: AddAccountFunction;
