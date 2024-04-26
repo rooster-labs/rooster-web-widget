@@ -62,7 +62,7 @@ function extractFinancialInfo(): FinancialInfo {
 
 function extractDepAccountTransactions(): TransactionData {
   const transactionRows = document.querySelectorAll("tr.transaction-row");
-  const transactions = new Array<any>();
+  const transactions = new Array<object>();
 
   transactionRows.forEach((row) => {
     const date = querySelectText(row, ".date");

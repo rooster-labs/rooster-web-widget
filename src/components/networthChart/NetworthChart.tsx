@@ -21,8 +21,6 @@ const matteColors: string[] = [
   "rgb(106, 61, 154)",
 ];
 
-type PieChartData = Array<{ name: string; value: number }>;
-
 interface NetWorthChartProps {
   accountSummaryData: AccountSummaryData;
 }

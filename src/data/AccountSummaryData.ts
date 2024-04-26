@@ -21,7 +21,7 @@ export interface Account {
   pendingBalance?: number; // The pending balance of the account (optional).
   cash?: number; // The cash amount in the account (optional).
   marketValue?: number; // The market value of the account's holdings (optional).
-  transactions?: Array<any>; // An array of transactions associated with the account (optional, type can be specified more explicitly than `any` if known).
+  transactions?: Array<object>; // An array of transactions associated with the account (optional, type can be specified more explicitly than `any` if known).
 }
 
 export async function getAccountSummaryData(): Promise<AccountSummaryData> {
