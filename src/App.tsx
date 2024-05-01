@@ -8,7 +8,7 @@ import {
 import { useImmerReducer } from "use-immer";
 import { accountSummaryDataReducer } from "./components/manageAccountSummaryData/AccountSummaryDataReducer.js";
 import { NetworthChart } from "./components/networthChart/NetworthChart.js";
-import { BottomNav, NavState } from "./components/navigation/NavBar.js";
+import { BottomNav, NavState, TopBar } from "./components/navigation/NavComponents.js";
 
 function App() {
   const [navState, setNavState] = useState<NavState>("networth");
@@ -43,7 +43,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1 className="text-lg">Rooster Financial</h1>
+      <TopBar/>
       <NavView />
       <BottomNav setNavState={setNavState} />
     </div>
