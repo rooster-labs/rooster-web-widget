@@ -1,5 +1,12 @@
-import { ChartOptions, ChartData, ArcElement, Chart, Legend, Tooltip } from "chart.js";
-import { useState } from "react";
+import {
+  ChartOptions,
+  ChartData,
+  ArcElement,
+  Chart,
+  Legend,
+  Tooltip,
+} from "chart.js";
+import { forwardRef, useEffect, useRef, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
 import {
   AccountSummaryData,
@@ -92,6 +99,50 @@ export function NetworthChart({ accountSummaryData }: NetWorthChartProps) {
       <div className=" w-[30rem] overflow-x-auto pt-4">
         <Doughnut data={data} options={doughnutGraphOptions} />
       </div>
+    </>
+  );
+}
+
+export function NetworthChart2({ accountSummaryData }: NetWorthChartProps) {
+  Chart.register(ArcElement, Tooltip, Legend);
+  const doughnutGraphRef = useRef(null);
+  const DoughnutChart = forwardRef(() => (
+    <div className=" w-[30rem] overflow-x-auto pt-4">
+      <canvas ref={doughnutGraphRef}></canvas>
+    </div>
+  ));
+
+  const [isDepositAccountSorted, setDepositSort] = useState(false);
+
+  const handleToggle = () => {
+    setDepositSort(!isDepositAccountSorted);
+  };
+
+  const data = createDoughnutGraphData(
+    accountSummaryData,
+    isDepositAccountSorted,
+  );
+
+  useEffect(() => {
+    // @ts-ignore
+    const doughnutChart = new Chart(doughnutGraphRef.current, {
+      type: "doughnut",
+      data,
+      options: doughnutGraphOptions,
+    });
+
+    return () => {
+      if (doughnutChart != undefined) doughnutChart.destroy();
+    };
+  }, [isDepositAccountSorted]);
+
+  return (
+    <>
+      <div className="flex justify-between text-base">
+        <h2>Net Worth: {calcNetWorth(accountSummaryData).toFixed(2)}</h2>
+        <button onClick={handleToggle}>Deposit Types / Accounts</button>
+      </div>
+      <DoughnutChart />
     </>
   );
 }
