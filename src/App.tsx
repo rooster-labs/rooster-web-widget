@@ -7,7 +7,7 @@ import {
 } from "./data/AccountSummaryData.js";
 import { useImmerReducer } from "use-immer";
 import { accountSummaryDataReducer } from "./components/manageAccountSummaryData/AccountSummaryDataReducer.js";
-import { NetworthChart, NetworthChart2 } from "./components/networthChart/NetworthChart.js";
+import { NetworthChart, NetworthChart2, NetworthChartView } from "./components/networthChart/NetworthChart.js";
 import { BottomNav, NavState, TopBar } from "./components/navigation/NavComponents.js";
 
 function App() {
@@ -37,7 +37,7 @@ function App() {
           />
         );
       default:
-        return <NetworthChart2 accountSummaryData={accountSummaryData} />;
+        return <NetworthChartView accountSummaryData={accountSummaryData} />;
     }
   }
 

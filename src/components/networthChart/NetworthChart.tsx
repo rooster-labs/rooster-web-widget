@@ -5,6 +5,8 @@ import {
   Chart,
   Legend,
   Tooltip,
+  LegendItem,
+  Plugin,
 } from "chart.js";
 import { forwardRef, useEffect, useRef, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
@@ -28,14 +30,22 @@ const matteColors: string[] = [
   "rgb(106, 61, 154)",
 ];
 
-interface NetWorthChartProps {
+interface NetWorthChartViewProps {
   accountSummaryData: AccountSummaryData;
 }
 
-const doughnutGraphOptions: ChartOptions<"doughnut"> = {
+interface NetWorthChartProps {
+  data: ChartData<"doughnut", number[], string>;
+}
+
+const doughnutGraphOptions: ChartOptions = {
   plugins: {
+    htmlLegend: {
+      // ID of the container to put the legend in
+      containerID: "legend-ref",
+    },
     legend: {
-      display: true,
+      display: false,
       position: "right",
       align: "start",
       maxWidth: 325,
@@ -103,46 +113,124 @@ export function NetworthChart({ accountSummaryData }: NetWorthChartProps) {
   );
 }
 
-export function NetworthChart2({ accountSummaryData }: NetWorthChartProps) {
-  Chart.register(ArcElement, Tooltip, Legend);
-  const doughnutGraphRef = useRef(null);
-  const DoughnutChart = forwardRef(() => (
-    <div className=" w-[30rem] overflow-x-auto pt-4">
-      <canvas ref={doughnutGraphRef}></canvas>
-    </div>
-  ));
-
+export function NetworthChartView({
+  accountSummaryData,
+}: NetWorthChartViewProps) {
   const [isDepositAccountSorted, setDepositSort] = useState(false);
-
-  const handleToggle = () => {
-    setDepositSort(!isDepositAccountSorted);
-  };
+  const handleToggle = () => setDepositSort(!isDepositAccountSorted);
 
   const data = createDoughnutGraphData(
     accountSummaryData,
     isDepositAccountSorted,
   );
 
-  useEffect(() => {
-    // @ts-ignore
-    const doughnutChart = new Chart(doughnutGraphRef.current, {
-      type: "doughnut",
-      data,
-      options: doughnutGraphOptions,
-    });
-
-    return () => {
-      if (doughnutChart != undefined) doughnutChart.destroy();
-    };
-  }, [isDepositAccountSorted]);
-
   return (
-    <>
+    <div className="overflow-y-auto">
       <div className="flex justify-between text-base">
         <h2>Net Worth: {calcNetWorth(accountSummaryData).toFixed(2)}</h2>
         <button onClick={handleToggle}>Deposit Types / Accounts</button>
       </div>
-      <DoughnutChart />
+      <NetworthChart2 data={data} />
+    </div>
+  );
+}
+
+export function NetworthChart2({ data }: NetWorthChartProps) {
+  Chart.register(ArcElement, Tooltip, Legend);
+  const [legendItems, setLegend] = useState<LegendItem[]>([]);
+  const [chartObj, setChartObj] = useState<Chart>({} as Chart);
+
+  function LegendView() {
+    console.log("Legend View", { legendItems, chartObj });
+
+    function handleVisibility(i: LegendItem) {
+      if (i && chartObj) {
+        chartObj.toggleDataVisibility(i.index);
+        chartObj.update();
+      }
+    }
+
+    return (
+      <div className="h-40">
+        <h1 className="text-lg"> Custom Legend </h1>
+        <div className="max-h-40 overflow-y-auto" id="legend-ref">
+          <ul className="list-disc pl-4">
+            {legendItems.map((item, index) => (
+              <li key={index} onClick={() => handleVisibility(item)}>
+                {item.hidden ? (
+                  <span className="line-through">{item.text}</span>
+                ) : (
+                  <span>{item.text}</span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    );
+  }
+
+  const htmlLegendPlugin: Plugin = {
+    id: "htmlLegend",
+    afterUpdate(chart, args, options) {
+      console.log("after update", { chart, args, options });
+      // if (chart) {
+      //   setChartObj(chart);
+      //   const chartLabels = chart?.options?.plugins?.legend?.labels;
+      //   console.log({chart}, chart.options, chart.options.plugins, chart?.options?.plugins?.legend, chartLabels)
+      //   // @ts-ignore
+      //   const items = chartLabels?.generateLabels(chart) ?? [];
+      //   setLegend(items);
+      // } else {
+      //   console.log("Chart is undefined")
+      // }
+    },
+  };
+
+  const doughnutGraphRef = useRef(null);
+
+  useEffect(() => {
+    // @ts-ignore\\\
+    const doughnutChart = new Chart(doughnutGraphRef.current, {
+      type: "doughnut",
+      data,
+      options: doughnutGraphOptions,
+      plugins: [htmlLegendPlugin],
+    });
+
+    if (doughnutChart) {
+      setChartObj(doughnutChart);
+      const chartLabels = doughnutChart?.options?.plugins?.legend?.labels;
+      // const chartLabels = Chart.defaults.plugins.legend.labels;
+      // console.log({chartLabels})
+      // console.log({doughnutChart}, doughnutChart.options, doughnutChart.options.plugins, doughnutChart.options.plugins?.legend?.labels?.generateLabels(), chartLabels)
+      // @ts-ignore
+      const items = chartLabels?.generateLabels(doughnutChart) ?? [];
+      setLegend(items);
+      // console.log("ChartLabels and items",{chartLabels, items})
+    } else {
+      // console.log("Chart is undefined")
+    }
+    console.log("NetWorthGraph Render", {
+      htmlLegendPlugin,
+      chartObj,
+      legendItems,
+    });
+
+    return () => {
+      if (doughnutChart != undefined) {
+        console.log("Destroying old graph");
+        doughnutChart.destroy();
+      }
+    };
+  }, [data]);
+
+  return (
+    <>
+      <div className=" w-[30rem] overflow-x-auto pt-4">
+        <canvas ref={doughnutGraphRef}></canvas>
+      </div>
+      <LegendView />
     </>
   );
 }
