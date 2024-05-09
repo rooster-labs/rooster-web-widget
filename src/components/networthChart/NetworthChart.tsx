@@ -8,7 +8,7 @@ import {
   LegendItem,
   Plugin,
 } from "chart.js";
-import { forwardRef, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
 import {
   AccountSummaryData,
@@ -16,6 +16,7 @@ import {
   getNetSummaryDataByAccount,
   getNetSummaryDataByType,
 } from "../../data/AccountSummaryData.js";
+import { useImmer } from "use-immer";
 
 const matteColors: string[] = [
   "rgb(166, 206, 227)",
@@ -38,32 +39,28 @@ interface NetWorthChartProps {
   data: ChartData<"doughnut", number[], string>;
 }
 
-const doughnutGraphOptions: ChartOptions = {
+const doughnutGraphOptions: ChartOptions<"doughnut"> = {
   plugins: {
-    htmlLegend: {
-      // ID of the container to put the legend in
-      containerID: "legend-ref",
+    tooltip: {
+      callbacks: {
+        label: function (this, tooltipItem) {
+          const balance = tooltipItem.parsed;
+          return `balance ($): ${balance}`;
+        },
+        title: function (this, tooltipItem) {
+          return tooltipItem[0].label.split("-")[0].trim();
+        },
+      },
     },
     legend: {
       display: false,
-      position: "right",
-      align: "start",
-      maxWidth: 325,
-      labels: {
-        font: {
-          size: 12,
-        },
-      },
     },
   },
   layout: {
     autoPadding: false,
-    padding: {
-      // right: 2
-    },
   },
   maintainAspectRatio: true, // Allows the chart to be responsive
-  aspectRatio: 2.5, // Adjust the aspect ratio to set the width
+  aspectRatio: 1, // Adjust the aspect ratio to set the width
 };
 
 const createDoughnutGraphData = (
@@ -86,33 +83,6 @@ const createDoughnutGraphData = (
   };
 };
 
-export function NetworthChart({ accountSummaryData }: NetWorthChartProps) {
-  Chart.register(ArcElement, Tooltip, Legend);
-
-  const [isDepositAccountSorted, setDepositSort] = useState(false);
-
-  const handleToggle = () => {
-    setDepositSort(!isDepositAccountSorted);
-  };
-
-  const data = createDoughnutGraphData(
-    accountSummaryData,
-    isDepositAccountSorted,
-  );
-
-  return (
-    <>
-      <div className="flex justify-between text-base">
-        <h2>Net Worth: {calcNetWorth(accountSummaryData).toFixed(2)}</h2>
-        <button onClick={handleToggle}>Deposit Types / Accounts</button>
-      </div>
-      <div className=" w-[30rem] overflow-x-auto pt-4">
-        <Doughnut data={data} options={doughnutGraphOptions} />
-      </div>
-    </>
-  );
-}
-
 export function NetworthChartView({
   accountSummaryData,
 }: NetWorthChartViewProps) {
@@ -125,92 +95,87 @@ export function NetworthChartView({
   );
 
   return (
-    <div className="overflow-y-auto">
+    <div>
       <div className="flex justify-between text-base">
         <h2>Net Worth: {calcNetWorth(accountSummaryData).toFixed(2)}</h2>
         <button onClick={handleToggle}>Deposit Types / Accounts</button>
       </div>
-      <NetworthChart2 data={data} />
+      <NetworthChart data={data} />
     </div>
   );
 }
 
-function LegendView({ legendItems, chartObj }) {
-  console.log("Legend View", { legendItems, chartObj });
+function LegendView({ legendItems, chartObj, setLegend }) {
+  const unicodeForCircle = "\u25CF";
 
   function handleVisibility(i: LegendItem) {
     if (i && chartObj) {
       chartObj.toggleDataVisibility(i.index);
       chartObj.update();
+      setLegend((draft) => {
+        draft[i.index].hidden = !draft[i.index].hidden;
+      });
     }
   }
 
   return (
-    <div className="h-40">
-      <h1 className="text-lg"> Custom Legend </h1>
-      <div className="max-h-40 overflow-y-auto" id="legend-ref">
-        <ul className="list-disc pl-4">
-          {legendItems.map((item, index) => (
-            <li key={index} onClick={() => handleVisibility(item)}>
-              {item.hidden ? (
-                <span className="line-through">{item.text}</span>
-              ) : (
-                <span>{item.text}</span>
-              )}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
+    <ul className="h-[200px] list-none overflow-y-auto px-4 pt-6">
+      {legendItems.map((item, index) => (
+        <li key={index} onClick={() => handleVisibility(item)}>
+          <span
+            style={{
+              color: matteColors[index % matteColors.length],
+              marginRight: "8px",
+            }}
+          >
+            {unicodeForCircle}
+          </span>
+          {item.hidden ? (
+            <span style={{ textDecoration: "line-through" }}>{item.text}</span>
+          ) : (
+            <span>{item.text}</span>
+          )}
+        </li>
+      ))}
+    </ul>
   );
 }
 
 const htmlLegendPlugin: Plugin = {
   id: "htmlLegend",
-  afterUpdate(chart, args, options) {
-    console.log("after update", { chart, args, options });
-  },
+  afterUpdate(chart, args, options) {},
 };
 
-export function NetworthChart2({ data }: NetWorthChartProps) {
+function NetworthChart({ data }: NetWorthChartProps) {
   Chart.register(ArcElement, Tooltip, Legend);
-  const [legendItems, setLegend] = useState<LegendItem[]>([]);
+  const [legendItems, setLegend] = useImmer<LegendItem[]>([]);
   const [chartObj, setChartObj] = useState<Chart>({} as Chart);
   const doughnutGraphRef = useRef(null);
 
-
-
   useEffect(() => {
-    // @ts-ignore\\\
-    const doughnutChart = new Chart(doughnutGraphRef.current, {
-      type: "doughnut",
-      data,
-      options: doughnutGraphOptions,
-      plugins: [htmlLegendPlugin],
-    });
+    const doughnutChart = doughnutGraphRef?.current ?? ({} as Chart);
 
-    if (doughnutChart) {
-      setChartObj(doughnutChart);
-      const chartLabels = doughnutChart?.options?.plugins?.legend?.labels;
-      // @ts-ignore
-      const items = chartLabels?.generateLabels(doughnutChart) ?? [];
-      setLegend(items);
-    }
-
-    return () => {
-      if (doughnutChart != undefined) {
-        console.log("Destroying old graph");
-        doughnutChart.destroy();
-      }
-    };
+    setChartObj(doughnutChart);
+    const chartLabels = doughnutChart?.options?.plugins?.legend?.labels;
+    // @ts-ignore
+    const items = chartLabels?.generateLabels(doughnutChart) ?? [];
+    setLegend(items);
   }, [data]);
 
   return (
-    <>
-      <div className=" w-[30rem] overflow-x-auto pt-4">
-        <canvas ref={doughnutGraphRef}></canvas>
+    <div className="flex h-full items-center justify-start">
+      <div className=" w-[200px] pt-4">
+        <Doughnut
+          ref={doughnutGraphRef}
+          data={data}
+          options={doughnutGraphOptions}
+        />
       </div>
-      <LegendView legendItems={legendItems} chartObj={chartObj}/>
-    </>
+      <LegendView
+        legendItems={legendItems}
+        chartObj={chartObj}
+        setLegend={setLegend}
+      />
+    </div>
   );
 }
