@@ -135,59 +135,50 @@ export function NetworthChartView({
   );
 }
 
+function LegendView({ legendItems, chartObj }) {
+  console.log("Legend View", { legendItems, chartObj });
+
+  function handleVisibility(i: LegendItem) {
+    if (i && chartObj) {
+      chartObj.toggleDataVisibility(i.index);
+      chartObj.update();
+    }
+  }
+
+  return (
+    <div className="h-40">
+      <h1 className="text-lg"> Custom Legend </h1>
+      <div className="max-h-40 overflow-y-auto" id="legend-ref">
+        <ul className="list-disc pl-4">
+          {legendItems.map((item, index) => (
+            <li key={index} onClick={() => handleVisibility(item)}>
+              {item.hidden ? (
+                <span className="line-through">{item.text}</span>
+              ) : (
+                <span>{item.text}</span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+const htmlLegendPlugin: Plugin = {
+  id: "htmlLegend",
+  afterUpdate(chart, args, options) {
+    console.log("after update", { chart, args, options });
+  },
+};
+
 export function NetworthChart2({ data }: NetWorthChartProps) {
   Chart.register(ArcElement, Tooltip, Legend);
   const [legendItems, setLegend] = useState<LegendItem[]>([]);
   const [chartObj, setChartObj] = useState<Chart>({} as Chart);
-
-  function LegendView() {
-    console.log("Legend View", { legendItems, chartObj });
-
-    function handleVisibility(i: LegendItem) {
-      if (i && chartObj) {
-        chartObj.toggleDataVisibility(i.index);
-        chartObj.update();
-      }
-    }
-
-    return (
-      <div className="h-40">
-        <h1 className="text-lg"> Custom Legend </h1>
-        <div className="max-h-40 overflow-y-auto" id="legend-ref">
-          <ul className="list-disc pl-4">
-            {legendItems.map((item, index) => (
-              <li key={index} onClick={() => handleVisibility(item)}>
-                {item.hidden ? (
-                  <span className="line-through">{item.text}</span>
-                ) : (
-                  <span>{item.text}</span>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    );
-  }
-
-  const htmlLegendPlugin: Plugin = {
-    id: "htmlLegend",
-    afterUpdate(chart, args, options) {
-      console.log("after update", { chart, args, options });
-      // if (chart) {
-      //   setChartObj(chart);
-      //   const chartLabels = chart?.options?.plugins?.legend?.labels;
-      //   console.log({chart}, chart.options, chart.options.plugins, chart?.options?.plugins?.legend, chartLabels)
-      //   // @ts-ignore
-      //   const items = chartLabels?.generateLabels(chart) ?? [];
-      //   setLegend(items);
-      // } else {
-      //   console.log("Chart is undefined")
-      // }
-    },
-  };
-
   const doughnutGraphRef = useRef(null);
+
+
 
   useEffect(() => {
     // @ts-ignore\\\
@@ -201,21 +192,10 @@ export function NetworthChart2({ data }: NetWorthChartProps) {
     if (doughnutChart) {
       setChartObj(doughnutChart);
       const chartLabels = doughnutChart?.options?.plugins?.legend?.labels;
-      // const chartLabels = Chart.defaults.plugins.legend.labels;
-      // console.log({chartLabels})
-      // console.log({doughnutChart}, doughnutChart.options, doughnutChart.options.plugins, doughnutChart.options.plugins?.legend?.labels?.generateLabels(), chartLabels)
       // @ts-ignore
       const items = chartLabels?.generateLabels(doughnutChart) ?? [];
       setLegend(items);
-      // console.log("ChartLabels and items",{chartLabels, items})
-    } else {
-      // console.log("Chart is undefined")
     }
-    console.log("NetWorthGraph Render", {
-      htmlLegendPlugin,
-      chartObj,
-      legendItems,
-    });
 
     return () => {
       if (doughnutChart != undefined) {
@@ -230,7 +210,7 @@ export function NetworthChart2({ data }: NetWorthChartProps) {
       <div className=" w-[30rem] overflow-x-auto pt-4">
         <canvas ref={doughnutGraphRef}></canvas>
       </div>
-      <LegendView />
+      <LegendView legendItems={legendItems} chartObj={chartObj}/>
     </>
   );
 }
