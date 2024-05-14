@@ -1,5 +1,13 @@
-import { ChartOptions, ChartData, ArcElement, Chart, Legend, Tooltip } from "chart.js";
-import { useState } from "react";
+import {
+  ChartOptions,
+  ChartData,
+  ArcElement,
+  Chart,
+  Legend,
+  Tooltip,
+  LegendItem,
+} from "chart.js";
+import { useEffect, useRef, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
 import {
   AccountSummaryData,
@@ -7,6 +15,21 @@ import {
   getNetSummaryDataByAccount,
   getNetSummaryDataByType,
 } from "../../data/AccountSummaryData.js";
+import { Updater, useImmer } from "use-immer";
+
+interface NetWorthChartViewProps {
+  accountSummaryData: AccountSummaryData;
+}
+
+interface NetWorthChartProps {
+  data: ChartData<"doughnut", number[], string>;
+}
+
+interface LegendViewProps {
+  legendItems: LegendItem[];
+  chartObj: Chart;
+  setLegend: Updater<LegendItem[]>;
+}
 
 const matteColors: string[] = [
   "rgb(166, 206, 227)",
@@ -21,38 +44,34 @@ const matteColors: string[] = [
   "rgb(106, 61, 154)",
 ];
 
-interface NetWorthChartProps {
-  accountSummaryData: AccountSummaryData;
-}
-
 const doughnutGraphOptions: ChartOptions<"doughnut"> = {
   plugins: {
-    legend: {
-      display: true,
-      position: "right",
-      align: "start",
-      maxWidth: 325,
-      labels: {
-        font: {
-          size: 12,
+    tooltip: {
+      callbacks: {
+        label: function (this, tooltipItem) {
+          const balance = tooltipItem.parsed;
+          return `balance ($): ${balance}`;
+        },
+        title: function (this, tooltipItem) {
+          return tooltipItem[0].label.split("-")[0].trim();
         },
       },
+    },
+    legend: {
+      display: false,
     },
   },
   layout: {
     autoPadding: false,
-    padding: {
-      // right: 2
-    },
   },
   maintainAspectRatio: true, // Allows the chart to be responsive
-  aspectRatio: 2.5, // Adjust the aspect ratio to set the width
+  aspectRatio: 1, // Adjust the aspect ratio to set the width
 };
 
-const createDoughnutGraphData = (
+function createDoughnutGraphData(
   accountSummaryData: AccountSummaryData,
   isDepositAccountSorted: boolean,
-): ChartData<"doughnut", number[], string> => {
+): ChartData<"doughnut", number[], string> {
   const data = isDepositAccountSorted
     ? getNetSummaryDataByAccount(accountSummaryData)
     : getNetSummaryDataByType(accountSummaryData);
@@ -67,16 +86,84 @@ const createDoughnutGraphData = (
       },
     ],
   };
-};
+}
 
-export function NetworthChart({ accountSummaryData }: NetWorthChartProps) {
+function ColouredCircle({ i }: { i: number }) {
+  const unicodeForCircle = "\u25CF";
+  return (
+    <span
+      style={{
+        color: matteColors[i % matteColors.length],
+        marginRight: "8px",
+      }}
+    >
+      {unicodeForCircle}
+    </span>
+  );
+}
+
+function LegendView({ legendItems, chartObj, setLegend }: LegendViewProps) {
+  function handleVisibility(item: LegendItem | null) {
+    const i = item?.index;
+    if (i != undefined && chartObj) {
+      chartObj.toggleDataVisibility(i);
+      chartObj.update();
+      setLegend((draft) => {
+        draft[i].hidden = !draft[i].hidden;
+        return draft;
+      });
+    }
+  }
+
+  return (
+    <ul className="h-[200px] list-none overflow-y-auto px-4 pt-6">
+      {legendItems.map((item, index) => (
+        <li key={index} onClick={() => handleVisibility(item)}>
+          <ColouredCircle i={index} />
+          <span className={item.hidden ? "line-through" : ""}>{item.text}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function NetworthChart({ data }: NetWorthChartProps) {
   Chart.register(ArcElement, Tooltip, Legend);
+  const [legendItems, setLegend] = useImmer<LegendItem[]>([]);
+  const [chartObj, setChartObj] = useState<Chart>({} as Chart);
+  const doughnutGraphRef = useRef(null);
 
+  useEffect(() => {
+    const doughnutChart = doughnutGraphRef?.current ?? ({} as Chart);
+    const chartLabels = doughnutChart?.options?.plugins?.legend?.labels ?? {};
+    const items = chartLabels?.generateLabels?.(doughnutChart) ?? [];
+    setChartObj(doughnutChart);
+    setLegend(items);
+  }, [data]);
+
+  return (
+    <div className="flex h-full items-center justify-start">
+      <div className=" w-[200px] pt-4">
+        <Doughnut
+          ref={doughnutGraphRef}
+          data={data}
+          options={doughnutGraphOptions}
+        />
+      </div>
+      <LegendView
+        legendItems={legendItems}
+        chartObj={chartObj}
+        setLegend={setLegend}
+      />
+    </div>
+  );
+}
+
+export function NetworthChartView({
+  accountSummaryData,
+}: NetWorthChartViewProps) {
   const [isDepositAccountSorted, setDepositSort] = useState(false);
-
-  const handleToggle = () => {
-    setDepositSort(!isDepositAccountSorted);
-  };
+  const handleToggle = () => setDepositSort(!isDepositAccountSorted);
 
   const data = createDoughnutGraphData(
     accountSummaryData,
@@ -84,14 +171,12 @@ export function NetworthChart({ accountSummaryData }: NetWorthChartProps) {
   );
 
   return (
-    <>
+    <div>
       <div className="flex justify-between text-base">
         <h2>Net Worth: {calcNetWorth(accountSummaryData).toFixed(2)}</h2>
         <button onClick={handleToggle}>Deposit Types / Accounts</button>
       </div>
-      <div className=" w-[30rem] overflow-x-auto pt-4">
-        <Doughnut data={data} options={doughnutGraphOptions} />
-      </div>
-    </>
+      <NetworthChart data={data} />
+    </div>
   );
 }
