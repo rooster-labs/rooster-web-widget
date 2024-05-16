@@ -14,14 +14,19 @@ export interface AccountSummary {
 }
 
 // Interface for the structure of an Account.
-export interface Account {
+export interface Account extends AccountDetails {
   accountName: string; // The name of the account.
   types: Array<string>; // a list of types that help classify the kind of account
-  balance: number; // The current balance of the account.
+  transactions?: Array<object>; // An array of transactions associated with the account (optional, type can be specified more explicitly than `any` if known).
+}
+
+export class AccountDetails {
+  [k: string]: any;
+  accountName = ""; // The name of the account.
+  balance = 0; // The current balance of the account.
   pendingBalance?: number; // The pending balance of the account (optional).
   cash?: number; // The cash amount in the account (optional).
   marketValue?: number; // The market value of the account's holdings (optional).
-  transactions?: Array<object>; // An array of transactions associated with the account (optional, type can be specified more explicitly than `any` if known).
 }
 
 export async function getAccountSummaryData(): Promise<AccountSummaryData> {
@@ -165,7 +170,7 @@ export function getNetSummaryDataByAccount(
         getAllDepositAccounts(p.accounts).map((a) => ({
           name: createLabel(p.businessName, a.accountName, a.balance),
           value: a.balance,
-        })),
+        }))
       )
       .sort((a, b) => b.value - a.value);
   } else {
@@ -178,7 +183,7 @@ export function getNetSummaryDataByType(
 ): Array<{ name: string; value: number }> {
   if (accountSummaryData) {
     const depositAccounts = Object.values(accountSummaryData).flatMap((p) =>
-      getAllDepositAccounts(p.accounts),
+      getAllDepositAccounts(p.accounts)
     );
     const depositTypeToValue = new Map<string, number>();
 
