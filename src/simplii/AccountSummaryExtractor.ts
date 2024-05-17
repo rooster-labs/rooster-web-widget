@@ -8,12 +8,12 @@ import { AccountSummaryExtractor } from "../data/AccountSummaryExtractor.js";
 export class SimpliiAccountSummaryExtractor extends AccountSummaryExtractor {
   name = "Simplii";
   type = "Bank";
-  
+
   extractAccountDetails(): Account[] {
     const accountSummaryList = accountSummaryXPaths.map((xMap) =>
-    extractAccountValues(xMap) as Account
+      extractAccountValues(xMap)
     );
-    
+
     return accountSummaryList;
   }
 }

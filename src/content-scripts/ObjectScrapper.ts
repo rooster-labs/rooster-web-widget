@@ -1,4 +1,4 @@
-import { AccountDetails } from "../data/AccountSummaryData.js";
+import { Account, AccountDetails, findAllAccountType } from "../data/AccountSummaryData.js";
 import { stringMoneyToFloat } from "../utils.js";
 import { getElementByXpath, getElementTextByXPath } from "./DOMUtils.js";
 
@@ -27,7 +27,7 @@ export function extractObjectValues<T>(xMap: XPathMap<T>) {
 
 export function extractAccountValues(
   xMap: XPathMap<AccountDetails>,
-): AccountDetails {
+): Account {
   const res = extractObjectValues(xMap);
   const accountDetails = new AccountDetails();
 
@@ -39,5 +39,7 @@ export function extractAccountValues(
     }
   }
 
-  return accountDetails;
+  accountDetails.types = findAllAccountType(accountDetails.accountName);
+
+  return accountDetails as Account;
 }
