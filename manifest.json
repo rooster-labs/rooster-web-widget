@@ -2,10 +2,10 @@
   "manifest_version": 3,
   "name": "Rooster Financial",
   "icons": {
-    "16": "images/Scrooge Boc Boc 16.png",
-    "32": "images/Scrooge Boc Boc 32.png",
-    "48": "images/Scrooge Boc Boc 48.png",
-    "128": "images/Scrooge Boc Boc 128.png"
+    "16": "images/RoosterFavicon16.png",
+    "32": "images/RoosterFavicon32.png",
+    "48": "images/RoosterFavicon48.png",
+    "128": "images/RoosterFavicon128.png"
   },
   "version": "1.0.0",
   "permissions": ["storage"],

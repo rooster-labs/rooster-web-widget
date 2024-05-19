@@ -1,5 +1,5 @@
 import { sumBy } from "lodash";
-import { filterOutFiller } from "../utils.js";
+import { filterOutFiller } from "../../../utils.js";
 
 export const ACCOUNT_SUMMARY_DATA = "accountSummaryData";
 // Interface representing a collection of products indexed by a string key.

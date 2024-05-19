@@ -14,7 +14,7 @@ import {
   calcNetWorth,
   getNetSummaryDataByAccount,
   getNetSummaryDataByType,
-} from "../../data/AccountSummaryData.js";
+} from "../../utils/common/data/AccountSummaryData.js";
 import { Updater, useImmer } from "use-immer";
 
 interface NetWorthChartViewProps {
@@ -170,10 +170,17 @@ export function NetworthChartView({
     isDepositAccountSorted,
   );
 
+  const netWorth = calcNetWorth(accountSummaryData);
+
   return (
     <div>
       <div className="flex justify-between text-base">
-        <h2>Net Worth: {calcNetWorth(accountSummaryData).toFixed(2)}</h2>
+        <b>
+          {Intl.NumberFormat("en-EN", {
+            style: "currency",
+            currency: "USD",
+          }).format(netWorth)}
+        </b>
         <button onClick={handleToggle}>Deposit Types / Accounts</button>
       </div>
       <NetworthChart data={data} />

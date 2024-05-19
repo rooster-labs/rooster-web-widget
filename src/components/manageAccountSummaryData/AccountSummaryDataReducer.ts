@@ -1,7 +1,7 @@
 import {
   AccountSummaryData,
   findAllAccountType,
-} from "../../data/AccountSummaryData.js";
+} from "../../utils/common/data/AccountSummaryData.js";
 
 export type ManageAccountsActionTypes =
   | "addAccountSummary"

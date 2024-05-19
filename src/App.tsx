@@ -4,11 +4,16 @@ import "./App.css";
 import {
   AccountSummaryData,
   getAccountSummaryData,
-} from "./data/AccountSummaryData.js";
+} from "./utils/common/data/AccountSummaryData.js";
 import { useImmerReducer } from "use-immer";
 import { accountSummaryDataReducer } from "./components/manageAccountSummaryData/AccountSummaryDataReducer.js";
 import { NetworthChartView } from "./components/networthChart/NetworthChart.js";
-import { BottomNav, NavState, TopBar } from "./components/navigation/NavComponents.js";
+import {
+  BottomNav,
+  NavState,
+  TopBar,
+} from "./components/navigation/NavComponents.js";
+import { getActiveSiteDomain } from "./utils/common/domains/trackSiteDomain.js";
 
 function App() {
   const [navState, setNavState] = useState<NavState>("networth");
@@ -28,6 +33,10 @@ function App() {
     });
   }, []);
 
+  useEffect(() => {
+    getActiveSiteDomain();
+  });
+
   function NavView() {
     switch (navState) {
       case "manage-business":
@@ -43,9 +52,9 @@ function App() {
 
   return (
     <div className="App">
-      <TopBar/>
+      <TopBar />
       <NavView />
-      <BottomNav setNavState={setNavState} />
+      <BottomNav navState={navState} setNavState={setNavState} />
     </div>
   );
 }

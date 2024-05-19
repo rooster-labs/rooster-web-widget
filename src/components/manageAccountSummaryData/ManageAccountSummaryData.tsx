@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import {
   AccountSummaryData,
   setAccountSummaryData,
-} from "../../data/AccountSummaryData.js";
+} from "../../utils/common/data/AccountSummaryData.js";
 import { ManageAccountSummaryList } from "./AccountSummaryList.js";
 import { ManageAccountsAction } from "./AccountSummaryDataReducer.js";
 

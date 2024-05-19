@@ -3,3 +3,28 @@
   height: 22rem;
   padding: 20px;
 }
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-weight: bold;
+  font-family: Garamond;
+}
+
+h1 {
+  font-size: 2em;
+}
+
+h2 {
+  font-size: 1.45em;
+}
+
+h3 {
+  font-size: 1.25em;
+}
+
+body {
+  font-family: "Century Gothic";
+}

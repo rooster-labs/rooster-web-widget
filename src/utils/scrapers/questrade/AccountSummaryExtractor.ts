@@ -1,6 +1,9 @@
-import { querySelectNumber, querySelectText } from "../utils.js";
-import { Account, findAllAccountType } from "../data/AccountSummaryData.js";
-import { AccountSummaryExtractor } from "../data/AccountSummaryExtractor.js";
+import { querySelectNumber, querySelectText } from "../../../utils.js";
+import {
+  Account,
+  findAllAccountType,
+} from "../../common/data/AccountSummaryData.js";
+import { AccountSummaryExtractor } from "../../common/data/AccountSummaryExtractor.js";
 
 export class QuestradeAccountSummaryExtractor extends AccountSummaryExtractor {
   name = "Questrade";

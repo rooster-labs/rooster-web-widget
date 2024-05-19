@@ -2,7 +2,7 @@ import { useState } from "react";
 import {
   AccountSummary,
   AccountSummaryData,
-} from "../../data/AccountSummaryData.js";
+} from "../../utils/common/data/AccountSummaryData.js";
 import { AccountsList } from "./AccountsList.js";
 import { PlusIcon } from "./ManageAccountSummaryIcons.js";
 
