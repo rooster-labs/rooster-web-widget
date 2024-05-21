@@ -8,7 +8,7 @@
     "128": "images/RoosterFavicon128.png"
   },
   "version": "1.0.0",
-  "permissions": ["storage"],
+  "permissions": ["storage", "tabs"],
   "action": { "default_popup": "index.html" },
   "background": {
     "service_worker": "src/scripts/background.ts",
@@ -16,19 +16,19 @@
   },
   "content_scripts": [
     {
-      "js": ["src/simplii/content.ts"],
+      "js": ["src/utils/scrapers/simplii/content.ts"],
       "matches": ["https://online.simplii.com/*"]
     },
     {
-      "js": ["src/questrade/content.ts"],
+      "js": ["src/utils/scrapers/questrade/content.ts"],
       "matches": ["https://my.questrade.com/clients/en/my_home"]
     },
     {
-      "js": ["src/tangerine/content.ts"],
+      "js": ["src/utils/scrapers/tangerine/content.ts"],
       "matches": ["https://www.tangerine.ca/app/*"]
     },
     {
-      "js": ["src/wealthsimple/content.ts"],
+      "js": ["src/utils/scrapers/wealthsimple/content.ts"],
       "matches": ["https://my.wealthsimple.com/app/home"]
     }
   ]

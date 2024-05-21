@@ -25,7 +25,7 @@ export function BottomNav({ navState, setNavState }: BottomNavProps) {
         className={`${navState === "manage-business" ? "active" : ""} text-info`}
         onClick={() => setNavState("manage-business")}
       >
-        <b>Summary</b>
+        <b>Accounts</b>
       </button>
     </div>
   );

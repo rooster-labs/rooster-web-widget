@@ -6,7 +6,7 @@ import {
 import { ManageAccountSummaryList } from "./AccountSummaryList.js";
 import { ManageAccountsAction } from "./AccountSummaryDataReducer.js";
 
-interface ManageAccountSumDataProp {
+interface IManageAccountSumDataProp {
   accountSummaryReducer: [
     AccountSummaryData,
     React.Dispatch<ManageAccountsAction>,
@@ -15,7 +15,7 @@ interface ManageAccountSumDataProp {
 
 function ManageAccountSummaryData({
   accountSummaryReducer,
-}: ManageAccountSumDataProp) {
+}: IManageAccountSumDataProp) {
   const [accountSummaryData, dispatch] = accountSummaryReducer;
 
   useEffect(() => {

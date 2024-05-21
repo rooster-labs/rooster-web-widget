@@ -13,10 +13,14 @@ import {
   NavState,
   TopBar,
 } from "./components/navigation/NavComponents.js";
-import { getActiveSiteDomain } from "./utils/common/domains/trackSiteDomain.js";
+import {
+  getActiveSiteDomain,
+  getFinanceWebsite,
+} from "./utils/common/domains/trackSiteDomain.js";
 
 function App() {
   const [navState, setNavState] = useState<NavState>("networth");
+  const [activeFinancialSite, setActiveFinancialSite] = useState<string>();
   const accountSummaryReducer = useImmerReducer(
     accountSummaryDataReducer,
     {} as AccountSummaryData,
@@ -34,8 +38,13 @@ function App() {
   }, []);
 
   useEffect(() => {
-    getActiveSiteDomain();
-  });
+    getFinanceWebsite().then((site) => {
+      console.log(site);
+      if (site) {
+        setActiveFinancialSite(site);
+      }
+    });
+  }, []);
 
   function NavView() {
     switch (navState) {
@@ -53,8 +62,12 @@ function App() {
   return (
     <div className="App">
       <TopBar />
+      {activeFinancialSite && <h3>{activeFinancialSite}</h3>}
+
       <NavView />
-      <BottomNav navState={navState} setNavState={setNavState} />
+      {activeFinancialSite && activeFinancialSite !== "" && (
+        <BottomNav navState={navState} setNavState={setNavState} />
+      )}
     </div>
   );
 }
