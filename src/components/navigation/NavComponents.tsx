@@ -1,11 +1,9 @@
-import {
-  GraphIcon,
-  EditIcon,
-  HamburgerMenuIcon,
-  QuestionMarkIcon,
-} from "./NavIcons.js";
-
-export type NavState = "networth" | "manage-business" | "menu";
+export type NavState =
+  | "networth"
+  | "af_networth"
+  | "af_manage_business"
+  | "menu"
+  | "user_sign_up";
 
 interface BottomNavProps {
   navState: NavState;
@@ -16,14 +14,14 @@ export function BottomNav({ navState, setNavState }: BottomNavProps) {
   return (
     <div className="btm-nav h-10">
       <button
-        className={`${navState === "networth" ? "active" : ""} text-info`}
-        onClick={() => setNavState("networth")}
+        className={`${navState === "af_networth" ? "active" : ""} text-info`}
+        onClick={() => setNavState("af_networth")}
       >
         <b>Summary</b>
       </button>
       <button
-        className={`${navState === "manage-business" ? "active" : ""} text-info`}
-        onClick={() => setNavState("manage-business")}
+        className={`${navState === "af_manage_business" ? "active" : ""} text-info`}
+        onClick={() => setNavState("af_manage_business")}
       >
         <b>Accounts</b>
       </button>

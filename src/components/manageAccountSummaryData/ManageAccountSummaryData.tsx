@@ -7,14 +7,11 @@ import { ManageAccountSummaryList } from "./AccountSummaryList.js";
 import { ManageAccountsAction } from "./AccountSummaryDataReducer.js";
 
 interface IManageAccountSumDataProp {
-  accountSummaryReducer: [
-    AccountSummaryData,
-    React.Dispatch<ManageAccountsAction>,
-  ];
+  reducer: [AccountSummaryData, React.Dispatch<ManageAccountsAction>];
 }
 
 function ManageAccountSummaryData({
-  accountSummaryReducer,
+  reducer: accountSummaryReducer,
 }: IManageAccountSumDataProp) {
   const [accountSummaryData, dispatch] = accountSummaryReducer;
 

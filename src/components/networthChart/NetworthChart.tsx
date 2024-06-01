@@ -18,7 +18,7 @@ import {
 import { Updater, useImmer } from "use-immer";
 
 interface NetWorthChartViewProps {
-  accountSummaryData: AccountSummaryData;
+  data: AccountSummaryData;
 }
 
 interface NetWorthChartProps {
@@ -160,7 +160,7 @@ function NetworthChart({ data }: NetWorthChartProps) {
 }
 
 export function NetworthChartView({
-  accountSummaryData,
+  data: accountSummaryData,
 }: NetWorthChartViewProps) {
   const [isDepositAccountSorted, setDepositSort] = useState(false);
   const handleToggle = () => setDepositSort(!isDepositAccountSorted);

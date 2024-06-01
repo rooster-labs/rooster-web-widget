@@ -13,19 +13,19 @@ import {
   NavState,
   TopBar,
 } from "./components/navigation/NavComponents.js";
-import {
-  getActiveSiteDomain,
-  getFinanceWebsite,
-} from "./utils/common/domains/trackSiteDomain.js";
+import { getFinanceWebsite } from "./utils/common/domains/trackSiteDomain.js";
+import UserProviderView, {
+  isUserSignedIn,
+} from "./components/userProvider/UserProvider.js";
 
 function App() {
-  const [navState, setNavState] = useState<NavState>("networth");
+  const [navState, setNavState] = useState<NavState>("user_sign_up");
   const [activeFinancialSite, setActiveFinancialSite] = useState<string>();
-  const accountSummaryReducer = useImmerReducer(
+  const accountSummaryRedu = useImmerReducer(
     accountSummaryDataReducer,
     {} as AccountSummaryData,
   );
-  const [accountSummaryData, dispatch] = accountSummaryReducer;
+  const [accountSummaryData, dispatch] = accountSummaryRedu;
 
   useEffect(() => {
     getAccountSummaryData().then((data) => {
@@ -40,34 +40,53 @@ function App() {
   useEffect(() => {
     getFinanceWebsite().then((site) => {
       console.log(site);
-      if (site) {
+      if (navState != "user_sign_up" && site) {
         setActiveFinancialSite(site);
+        if (site && site !== "") setNavState("af_networth");
+        else setNavState("networth");
       }
     });
   }, []);
 
+  useEffect(() => {
+    isUserSignedIn()
+      .then((res) => (res ? "networth" : "user_sign_up"))
+      .then(setNavState);
+  }, []);
+
   function NavView() {
     switch (navState) {
-      case "manage-business":
+      case "user_sign_up":
         return (
-          <ManageAccountSummaryData
-            accountSummaryReducer={accountSummaryReducer}
-          />
+          <UserProviderView navState={navState} setNavState={setNavState} />
         );
+      case "af_manage_business":
+        return (
+          <>
+            <h3>{activeFinancialSite}</h3>
+            <ManageAccountSummaryData reducer={accountSummaryRedu} />
+            <BottomNav navState={navState} setNavState={setNavState} />
+          </>
+        );
+      case "af_networth":
+        return (
+          <>
+            <h3>{activeFinancialSite}</h3>
+            <NetworthChartView data={accountSummaryData} />;
+            <BottomNav navState={navState} setNavState={setNavState} />
+          </>
+        );
+      case "networth":
+        return <NetworthChartView data={accountSummaryData} />;
       default:
-        return <NetworthChartView accountSummaryData={accountSummaryData} />;
+        return <NetworthChartView data={accountSummaryData} />;
     }
   }
 
   return (
     <div className="App">
       <TopBar />
-      {activeFinancialSite && <h3>{activeFinancialSite}</h3>}
-
       <NavView />
-      {activeFinancialSite && activeFinancialSite !== "" && (
-        <BottomNav navState={navState} setNavState={setNavState} />
-      )}
     </div>
   );
 }
