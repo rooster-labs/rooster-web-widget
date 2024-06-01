@@ -1,8 +1,8 @@
 import {
   Account,
   AccountSummary,
-  updateAccountSummary,
 } from "./AccountSummaryData.js";
+import { ls } from "./localStorage.js";
 
 export abstract class AccountSummaryExtractor {
   abstract name: string;
@@ -19,7 +19,7 @@ export abstract class AccountSummaryExtractor {
   onLoad(timeout: number = 4000) {
     setTimeout(() => {
       const accountSummary = this.createSummary();
-      updateAccountSummary(accountSummary);
+      ls.updateAccountSummary(accountSummary);
       console.log(`${this.name} Summary Page`, { accountSummary });
     }, timeout);
   }

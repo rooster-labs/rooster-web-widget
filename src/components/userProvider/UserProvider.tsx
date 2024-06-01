@@ -1,16 +1,13 @@
-import React, { SyntheticEvent, useState } from "react";
+import { SyntheticEvent, useState } from "react";
 import { NavState } from "../navigation/NavComponents.js";
 import { accountSummaryService } from "../../utils/common/apis/accountSummaryService.js";
 import { UserIcon } from "./UserProviderIcons.js";
-import { Database } from "../../utils/common/apis/accountSummaryService.types.js";
-
-const USER_INFO = "user_info";
+import { ls } from "../../utils/common/data/localStorage.js";
 
 export async function isUserSignedIn() {
-  return chrome.storage.local.get([USER_INFO]).then((res) => {
-    console.log("User Provider localstorge", res);
-    return res[USER_INFO]?.user_id != undefined;
-  });
+  const userInfo = await ls.getUserInfo();
+  console.log("UserInfo from localStorage:", userInfo);
+  return userInfo?.user_id != undefined;
 }
 
 function assInitUser(userName: string) {
@@ -27,7 +24,6 @@ function assGetUser(userName: string) {
     .eq("user_name", userName);
 }
 
-type UserTableType = Database["public"]["Tables"]["user_table"]["Row"];
 
 interface UserProviderProps {
   navState: NavState;
@@ -38,9 +34,6 @@ export function UserProviderView({ navState, setNavState }: UserProviderProps) {
   const [userName, setUserName] = useState("");
   const [isSignInForm, setIsSignInForm] = useState(false);
 
-  const setUserInfo = (userInfo: UserTableType) =>
-    chrome.storage.local.set({ [USER_INFO]: userInfo });
-
   const handleSignInOrSignUp = (e: SyntheticEvent) => {
     const initOrGetUser = isSignInForm ? assGetUser : assInitUser;
     e.preventDefault();
@@ -50,7 +43,7 @@ export function UserProviderView({ navState, setNavState }: UserProviderProps) {
       if (res.error) {
         console.log(`Error in handleSignUp init user response:`, res);
       } else if (res.data && res.data.length > 0) {
-        setUserInfo(res.data[0]);
+        ls.setUserInfo(res.data[0]);
         setNavState("networth");
       }
     });

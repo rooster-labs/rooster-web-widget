@@ -1,6 +1,8 @@
+// NavState represents which page should be rendered
+// The acronym "af" stands for active financial page where nav bar will show up
 export type NavState =
   | "networth"
-  | "af_networth"
+  | "af_networth"         
   | "af_manage_business"
   | "menu"
   | "user_sign_up";

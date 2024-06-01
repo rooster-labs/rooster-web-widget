@@ -3,7 +3,6 @@ import ManageAccountSummaryData from "./components/manageAccountSummaryData/Mana
 import "./App.css";
 import {
   AccountSummaryData,
-  getAccountSummaryData,
 } from "./utils/common/data/AccountSummaryData.js";
 import { useImmerReducer } from "use-immer";
 import { accountSummaryDataReducer } from "./components/manageAccountSummaryData/AccountSummaryDataReducer.js";
@@ -17,6 +16,7 @@ import { getFinanceWebsite } from "./utils/common/domains/trackSiteDomain.js";
 import UserProviderView, {
   isUserSignedIn,
 } from "./components/userProvider/UserProvider.js";
+import { ls } from "./utils/common/data/localStorage.js";
 
 function App() {
   const [navState, setNavState] = useState<NavState>("user_sign_up");
@@ -28,7 +28,7 @@ function App() {
   const [accountSummaryData, dispatch] = accountSummaryRedu;
 
   useEffect(() => {
-    getAccountSummaryData().then((data) => {
+    ls.getAccountSummaryData().then((data) => {
       dispatch({
         type: "setData",
         businessName: "setData",
@@ -40,18 +40,23 @@ function App() {
   useEffect(() => {
     getFinanceWebsite().then((site) => {
       console.log(site);
-      if (navState != "user_sign_up" && site) {
-        setActiveFinancialSite(site);
-        if (site && site !== "") setNavState("af_networth");
-        else setNavState("networth");
-      }
+      setActiveFinancialSite(site);
     });
   }, []);
 
   useEffect(() => {
     isUserSignedIn()
-      .then((res) => (res ? "networth" : "user_sign_up"))
-      .then(setNavState);
+      .then((isSignedIn) => {
+        if (isSignedIn) {
+          if (activeFinancialSite && (activeFinancialSite != "")) {
+            setNavState("af_networth")
+          } else {
+            setNavState("networth")
+          }
+        } else {
+          setNavState("user_sign_up")
+        }
+      })
   }, []);
 
   function NavView() {
