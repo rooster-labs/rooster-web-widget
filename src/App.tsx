@@ -39,24 +39,33 @@ function App() {
 
   useEffect(() => {
     getFinanceWebsite().then((site) => {
-      console.log(site);
+      console.log("Get website", site);
       setActiveFinancialSite(site);
     });
   }, []);
 
   useEffect(() => {
-    isUserSignedIn()
-      .then((isSignedIn) => {
-        if (isSignedIn) {
-          if (activeFinancialSite && (activeFinancialSite != "")) {
-            setNavState("af_networth")
+    let activeSite: string | undefined = undefined;
+
+    getFinanceWebsite().then((site) => {
+      console.log("Get website", site);
+      setActiveFinancialSite(site);
+      activeSite = site;
+    }).then(() => {
+      isUserSignedIn()
+        .then((isSignedIn) => {
+          console.log("Sign in state and af state", {isSignedIn, activeFinancialSite})
+          if (isSignedIn) {
+            if (activeSite && activeSite != "") {
+              setNavState("af_networth");
+            } else {
+              setNavState("networth");
+            }
           } else {
-            setNavState("networth")
+            setNavState("user_sign_up")
           }
-        } else {
-          setNavState("user_sign_up")
-        }
-      })
+        })
+    })
   }, []);
 
   function NavView() {
