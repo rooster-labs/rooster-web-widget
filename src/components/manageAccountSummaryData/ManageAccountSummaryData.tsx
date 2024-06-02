@@ -1,26 +1,21 @@
 import React, { useEffect } from "react";
-import {
-  AccountSummaryData,
-  setAccountSummaryData,
-} from "../../utils/common/data/AccountSummaryData.js";
+import { AccountSummaryData } from "../../utils/common/data/AccountSummaryData.js";
 import { ManageAccountSummaryList } from "./AccountSummaryList.js";
 import { ManageAccountsAction } from "./AccountSummaryDataReducer.js";
+import { ls } from "../../utils/common/data/localStorage.js";
 
 interface IManageAccountSumDataProp {
-  accountSummaryReducer: [
-    AccountSummaryData,
-    React.Dispatch<ManageAccountsAction>,
-  ];
+  reducer: [AccountSummaryData, React.Dispatch<ManageAccountsAction>];
 }
 
 function ManageAccountSummaryData({
-  accountSummaryReducer,
+  reducer: accountSummaryReducer,
 }: IManageAccountSumDataProp) {
   const [accountSummaryData, dispatch] = accountSummaryReducer;
 
   useEffect(() => {
     console.log("manage Account", accountSummaryData);
-    setAccountSummaryData(accountSummaryData);
+    ls.setAccountSummaryData(accountSummaryData);
   }, [accountSummaryData]);
 
   function handleAddBusiness(businessName: string) {

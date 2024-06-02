@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.43.4",
     "@types/chrome": "^0.0.263",
     "@types/echarts": "^4.9.22",
     "chart.js": "^4.4.2",
