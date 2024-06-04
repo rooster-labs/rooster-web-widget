@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
-import { AccountSummaryData } from "../../utils/common/data/AccountSummaryData.js";
 import { ManageAccountSummaryList } from "./AccountSummaryList.js";
 import { ManageAccountsAction } from "./AccountSummaryDataReducer.js";
 import { ls } from "../../utils/common/data/localStorage.js";
+import { ScrapedAccountData } from "../../utils/common/data/AccountSummaryExtractor.js";
 
 interface IManageAccountSumDataProp {
-  reducer: [AccountSummaryData, React.Dispatch<ManageAccountsAction>];
+  reducer: [ScrapedAccountData[], React.Dispatch<ManageAccountsAction>];
 }
 
 function ManageAccountSummaryData({
@@ -15,48 +15,48 @@ function ManageAccountSummaryData({
 
   useEffect(() => {
     console.log("manage Account", accountSummaryData);
-    ls.setAccountSummaryData(accountSummaryData);
+    ls.setAccountData(accountSummaryData);
   }, [accountSummaryData]);
 
-  function handleAddBusiness(businessName: string) {
+  function handleAddBusiness(serviceName: string) {
     dispatch({
       type: "addAccountSummary",
-      businessName: businessName,
+      serviceName,
     });
   }
 
   function handleAddAccount(
-    businessName: string,
+    serviceName: string,
     accountName: string,
     balance: number,
   ) {
     dispatch({
       type: "addAccount",
-      businessName,
+      serviceName,
       accountName,
       balance,
     });
   }
 
   function handleEditAccount(
-    businessName: string,
+    serviceName: string,
     accountName: string,
     newAccountName: string,
     balance: number,
   ) {
     dispatch({
       type: "editAccount",
-      businessName,
+      serviceName,
       accountName,
       newAccountName,
       balance,
     });
   }
 
-  function handleDeleteAccount(businessName: string, accountName: string) {
+  function handleDeleteAccount(serviceName: string, accountName: string) {
     dispatch({
       type: "deleteAccount",
-      businessName,
+      serviceName,
       accountName,
     });
   }

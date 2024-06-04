@@ -1,10 +1,8 @@
 import { useState } from "react";
-import {
-  AccountSummary,
-  AccountSummaryData,
-} from "../../utils/common/data/AccountSummaryData.js";
 import { AccountsList } from "./AccountsList.js";
 import { PlusIcon } from "./ManageAccountSummaryIcons.js";
+import { groupBy } from "lodash";
+import { ScrapedAccountData } from "../../utils/common/data/AccountSummaryExtractor.js";
 
 // Function Types
 export type AddAccountSumFunction = (businessName: string) => void;
@@ -32,14 +30,14 @@ interface AddAccountSummaryProps {
 }
 
 interface ManageAccountSummaryProps {
-  accountSummary: AccountSummary;
+  accountSummary: ScrapedAccountData[];
   onAddAccount: AddAccountFunction;
   onDeleteAccount: DeleteAccountFunction;
   onEditAccount: EditAccountFunction;
 }
 
 interface ManageAccountSummaryDataProps {
-  accountSummaryData: AccountSummaryData;
+  accountSummaryData: ScrapedAccountData[];
   onAddAccountSummary: AddAccountSumFunction;
   onAddAccount: AddAccountFunction;
   onDeleteAccount: DeleteAccountFunction;
@@ -56,11 +54,11 @@ function ManageAccountSummary({
     <div className="collapse join-item collapse-arrow border border-base-300">
       <input type="checkbox" name="my-accordion-4" />
       <div className="text-m collapse-title font-medium">
-        {accountSummary.businessName}
+        {accountSummary[0].service_name}
       </div>
       <div className="collapse-content">
         <AccountsList
-          business={accountSummary}
+          accountsInService={accountSummary}
           onAddAccount={onAddAccount}
           onEditAccount={onEditAccount}
           onDeleteAccount={onDeleteAccount}
@@ -107,13 +105,14 @@ export function ManageAccountSummaryList({
   onDeleteAccount,
   onEditAccount,
 }: ManageAccountSummaryDataProps) {
-  const accountSummaryList = Object.values(accountSummaryData);
+  const accountsByService = groupBy(accountSummaryData, "service_name");
+  const accountSummaryList = Object.values(accountsByService);
 
   return (
     <div className="join join-vertical w-full">
       <ul>
         {accountSummaryList.map((accountSum) => (
-          <li key={accountSum.businessName}>
+          <li key={accountSum[0].service_name}>
             <ManageAccountSummary
               accountSummary={accountSum}
               onAddAccount={onAddAccount}

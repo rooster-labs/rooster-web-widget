@@ -9,37 +9,34 @@ import {
   DeleteAccountFunction,
   EditAccountFunction,
 } from "./AccountSummaryList.js";
-import {
-  Account,
-  AccountSummary,
-} from "../../utils/common/data/AccountSummaryData.js";
+import { ScrapedAccountData } from "../../utils/common/data/AccountSummaryExtractor.js";
 
 interface AddAccountProps {
   onAddAccount: AddAccountFunction;
-  businessName: string;
+  serviceName: string;
 }
 
 interface ManageAccountProps {
-  businessName: string;
-  account: Account;
+  serviceName: string;
+  account: ScrapedAccountData;
   onDeleteAccount: DeleteAccountFunction;
   onEditAccount: EditAccountFunction;
 }
 
 interface AccountListProps {
-  business: AccountSummary;
+  accountsInService: ScrapedAccountData[];
   onDeleteAccount: DeleteAccountFunction;
   onEditAccount: EditAccountFunction;
   onAddAccount: AddAccountFunction;
 }
 
-function AddAccount({ onAddAccount, businessName }: AddAccountProps) {
+function AddAccount({ onAddAccount, serviceName }: AddAccountProps) {
   const [accountName, setAccountName] = useState("");
   const [accountBalance, setAccountBalance] = useState<number>(0);
 
   const handleAddAccount = () => {
     if (accountName.trim()) {
-      onAddAccount(businessName, accountName, accountBalance);
+      onAddAccount(serviceName, accountName, accountBalance);
       setAccountName("");
       setAccountBalance(0);
     }
@@ -75,22 +72,24 @@ function AddAccount({ onAddAccount, businessName }: AddAccountProps) {
 }
 
 function ManageAccount({
-  businessName,
+  serviceName,
   account,
   onDeleteAccount,
   onEditAccount,
 }: ManageAccountProps) {
-  const [newAccountName, setNewAccountName] = useState(account.accountName);
-  const [newBalance, setNewBalance] = useState(account.balance);
+  const [newAccountName, setNewAccountName] = useState(
+    account.account_name ?? "",
+  );
+  const [newBalance, setNewBalance] = useState(account.balance ?? NaN);
 
   const handleBlurUpdate = () => {
     if (
-      newAccountName !== account.accountName ||
+      newAccountName !== account.account_name ||
       newBalance !== account.balance
     ) {
       onEditAccount(
-        businessName,
-        account.accountName,
+        serviceName,
+        account.account_name ?? "",
         newAccountName,
         newBalance,
       );
@@ -101,7 +100,7 @@ function ManageAccount({
     <div className="flex items-center justify-between gap-2 text-base">
       <input
         type="text"
-        placeholder={account.accountName}
+        placeholder={account.account_name ?? "N/A"}
         value={newAccountName}
         onChange={(e) => setNewAccountName(e.target.value)}
         onBlur={handleBlurUpdate}
@@ -112,7 +111,7 @@ function ManageAccount({
         <input
           type="number"
           className="grow"
-          placeholder={account.balance.toString()}
+          placeholder={account?.balance?.toString() ?? "NaN"}
           value={newBalance.toString()}
           onChange={(e) => setNewBalance(parseFloat(e.target.value) || 0)}
           onBlur={handleBlurUpdate}
@@ -120,7 +119,7 @@ function ManageAccount({
       </label>
       <button
         className="btn btn-outline btn-error btn-xs items-center"
-        onClick={() => onDeleteAccount(businessName, account.accountName)}
+        onClick={() => onDeleteAccount(serviceName, account.account_name ?? "N/A")}
       >
         <TrashIcon />
       </button>
@@ -129,7 +128,7 @@ function ManageAccount({
 }
 
 export function AccountsList({
-  business,
+  accountsInService,
   onDeleteAccount,
   onEditAccount,
   onAddAccount,
@@ -137,10 +136,10 @@ export function AccountsList({
   return (
     <div>
       <ul>
-        {business.accounts.map((account) => (
-          <li key={account.accountName}>
+        {accountsInService.map((account) => (
+          <li key={account.account_name}>
             <ManageAccount
-              businessName={business.businessName}
+              serviceName={account.service_name ?? "N/A"}
               account={account}
               onEditAccount={onEditAccount}
               onDeleteAccount={onDeleteAccount}
@@ -149,7 +148,7 @@ export function AccountsList({
         ))}
         <li key="add-account">
           <AddAccount
-            businessName={business.businessName}
+            serviceName={accountsInService[0].service_name ?? "N/A"}
             onAddAccount={onAddAccount}
           />
         </li>

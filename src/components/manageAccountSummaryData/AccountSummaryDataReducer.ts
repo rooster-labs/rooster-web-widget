@@ -1,12 +1,10 @@
-import {
-  AccountSummaryData,
-  findAllAccountType,
-} from "../../utils/common/data/AccountSummaryData.js";
+import { findAccountType } from "../../utils/common/data/accountClassifier.js";
+import { ScrapedAccountData } from "../../utils/common/data/AccountSummaryExtractor.js";
 
 export type ManageAccountsActionTypes =
   | "addAccountSummary"
   | "deleteAccountSummary"
-  | "editBusinessName"
+  | "editServiceName"
   | "addAccount"
   | "deleteAccount"
   | "editAccount"
@@ -14,22 +12,22 @@ export type ManageAccountsActionTypes =
 
 export type ManageAccountsAction = {
   type: ManageAccountsActionTypes;
-  businessName: string;
-  newBusinessName?: string;
+  serviceName: string;
+  newServiceName?: string;
   accountName?: string;
   newAccountName?: string;
   balance?: number;
-  data?: AccountSummaryData;
+  data?: ScrapedAccountData[];
 };
 
 export function accountSummaryDataReducer(
-  state: AccountSummaryData,
+  state: ScrapedAccountData[],
   action: ManageAccountsAction,
-): AccountSummaryData {
+): ScrapedAccountData[] {
   const {
     type,
-    businessName,
-    newBusinessName,
+    serviceName,
+    newServiceName,
     accountName,
     newAccountName,
     balance,
@@ -37,24 +35,26 @@ export function accountSummaryDataReducer(
   } = action;
 
   // Validate businessName
-  if (!businessName) {
+  if (!serviceName) {
     throw new Error("BusinessName is required.");
   }
 
   switch (type) {
     case "addAccountSummary":
-      if (!state[businessName]) {
-        state[businessName] = { businessName: businessName, accounts: [] };
-      }
       break;
 
     case "deleteAccountSummary":
-      delete state[businessName];
+      return state.filter((a) => a.service_name != serviceName);
       break;
 
-    case "editBusinessName":
-      if (newBusinessName && state[businessName]) {
-        state[businessName].businessName = newBusinessName;
+    case "editServiceName":
+      if (newServiceName) {
+        return state.map((a) => {
+          if (a.service_name == serviceName) {
+            a.service_name = newServiceName;
+          }
+          return a;
+        });
       }
       break;
 
@@ -62,31 +62,32 @@ export function accountSummaryDataReducer(
       if (
         accountName &&
         balance !== undefined &&
-        !state[businessName].accounts.find((a) => a.accountName === accountName)
+        !state.find((a) => a.account_name === accountName)
       ) {
-        state[businessName].accounts.push({
-          accountName: accountName,
+        state.push({
+          account_name: accountName,
           balance: balance,
-          types: findAllAccountType(accountName), // Assuming this function is defined elsewhere
-        });
+          account_type: findAccountType(accountName),
+        } as ScrapedAccountData);
       }
       break;
 
     case "deleteAccount":
-      if (accountName) {
-        state[businessName].accounts = state[businessName].accounts.filter(
-          (a) => a.accountName !== accountName,
+      if (accountName && serviceName) {
+        state.filter(
+          (a) =>
+            !(a.service_name == serviceName && a.account_name == accountName),
         );
       }
       break;
 
     case "editAccount":
       if (accountName) {
-        const account = state[businessName].accounts.find(
-          (a) => a.accountName === accountName,
+        const account = state.find(
+          (a) => a.account_name === accountName,
         );
         if (account) {
-          account.accountName = newAccountName ?? account.accountName;
+          account.account_name = newAccountName ?? account.account_name;
           account.balance = balance ?? account.balance;
         }
       }

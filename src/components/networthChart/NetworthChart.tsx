@@ -10,15 +10,15 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
 import {
-  AccountSummaryData,
   calcNetWorth,
   getNetSummaryDataByAccount,
   getNetSummaryDataByType,
-} from "../../utils/common/data/AccountSummaryData.js";
+} from "../../utils/common/data/accountSummaryUtils.js";
 import { Updater, useImmer } from "use-immer";
+import { ScrapedAccountData } from "../../utils/common/data/AccountSummaryExtractor.js";
 
 interface NetWorthChartViewProps {
-  data: AccountSummaryData;
+  data: ScrapedAccountData[];
 }
 
 interface NetWorthChartProps {
@@ -69,7 +69,7 @@ const doughnutGraphOptions: ChartOptions<"doughnut"> = {
 };
 
 function createDoughnutGraphData(
-  accountSummaryData: AccountSummaryData,
+  accountSummaryData: ScrapedAccountData[],
   isDepositAccountSorted: boolean,
 ): ChartData<"doughnut", number[], string> {
   const data = isDepositAccountSorted
