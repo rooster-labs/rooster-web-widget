@@ -1,3 +1,5 @@
+import { findKey } from "lodash";
+
 interface siteMetadata {
   domains: string[];
 }
@@ -21,29 +23,15 @@ export const getActiveSiteDomain = async () => {
   return activeUrl;
 };
 
-export const getFinanceWebsite = async () => {
-  let activeFinancialSite;
+export async function getFinanceWebsite() {
   const currentDomain = await getActiveSiteDomain();
-
+  // const serviceSiteEntries = Object.entries(serviceSiteList);
   if (currentDomain) {
-    const siteKeyList = Object.keys(serviceSiteList);
-
-    for (let num = 0; num < Object.keys(serviceSiteList).length; num += 1) {
-      const siteName = siteKeyList[num];
-      const siteList =
-        serviceSiteList[siteName as keyof typeof serviceSiteList];
-      for (let num = 0; num < siteList?.length; num += 1) {
-        const baseUrl = siteList[num];
-        const regex = new RegExp(baseUrl); //`/${baseUrl}/g`;
-
-        if (regex.test(currentDomain)) {
-          activeFinancialSite = siteName;
-
-          return siteName;
-        }
-      }
-    }
+    return findKey(
+      serviceSiteList,
+      (domainList) => domainList.some((d) => currentDomain.includes(d)),
+    );
+  } else {
+    return undefined;
   }
-
-  return activeFinancialSite;
-};
+}

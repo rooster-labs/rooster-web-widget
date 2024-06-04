@@ -1,10 +1,11 @@
-// TODO: Create a deposit types Set. Then a seperate Map for type to classifier
+// TODO: Create an AI powered Classifier
+
 export const depositTypesClassifier = {
   chequing: ["chequing", "cash"],
   crypto: ["crypto"],
   fhsa: ["fhsa"],
   rrsp: ["rrsp", "rsp"],
-  savings: ["savings"],
+  savings: ["savings", "non-registered"],
   tfsa: ["tfsa"],
 } as const;
 
@@ -60,68 +61,3 @@ const investmentAccountClassifier = new Set([
 export function isInvestmentAccount(accountName: string) {
   return investmentAccountClassifier.has(accountName);
 }
-
-// const depositClassifier = new Set([
-//   "chequing",
-//   "crypto",
-//   "fhsa",
-//   "rrsp",
-//   "rsp",
-//   "savings",
-//   "tfsa",
-//   "non-registered",
-// ]);
-
-// const rrspClassifier = new Set(["rrsp", "rsp"]);
-
-// const creditClassifier = new Set([
-//   "credit card",
-//   "loan",
-//   "line of credit",
-//   "secured line of credit",
-//   "visa",
-//   "mastercard",
-//   "american express",
-// ]);
-
-// const creditCardClassifier = new Set([
-//   "visa",
-//   "mastercard",
-//   "american express",
-// ]);
-
-// export function findAllAccountType(accountName: string): string[] {
-//   const lowerCaseName = accountName.toLowerCase();
-//   const accountTypeList = new Array<string>();
-//   let isDeposit = false;
-
-//   depositClassifier.forEach((c) => {
-//     if (lowerCaseName.includes(c)) {
-//       if (rrspClassifier.has(c)) {
-//         accountTypeList.push("rrsp");
-//       } else {
-//         accountTypeList.push(c);
-//       }
-//       isDeposit = true;
-//     }
-//   });
-
-//   if (lowerCaseName == "cash") {
-//     accountTypeList.push("chequing");
-//     isDeposit = true;
-//   }
-
-//   if (!isDeposit) {
-//     creditClassifier.forEach((c) => {
-//       if (lowerCaseName.includes(c)) {
-//         if (creditCardClassifier.has(c)) {
-//           accountTypeList.push("credit card");
-//         } else {
-//           accountTypeList.push(c);
-//         }
-//       }
-//     });
-//   }
-
-//   return accountTypeList;
-// }
