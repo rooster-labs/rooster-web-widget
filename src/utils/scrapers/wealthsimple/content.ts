@@ -1,29 +1,30 @@
 import {
-  Account,
-  findAllAccountType,
-} from "../../common/data/AccountSummaryData.js";
-import { AccountSummaryExtractor } from "../../common/data/AccountSummaryExtractor.js";
+  AccountSummaryExtractor,
+  ScrapedAccountData,
+} from "../../common/data/AccountSummaryExtractor.js";
 import { querySelectNumber, querySelectText } from "../../../utils.js";
+import { findAccountType } from "../../common/data/accountClassifier.js";
 
 class WealthSimpleAccountSummaryExtractor extends AccountSummaryExtractor {
-  name = "WealthSimple";
+  service_name = "WealthSimple";
 
-  extractAccountDetails(): Account[] {
-    const accounts: Account[] = [];
+  extractAccountDetails(): ScrapedAccountData[] {
+    const accounts: ScrapedAccountData[] = [];
     const accountElements = document.querySelectorAll(
-      ".sc-6e9df86d-0.sc-9ac2a8fd-1.itAfij.hrCMff",
+      ".sc-6e9df86d-0 .sc-4fb201c3-1",
     );
 
     accountElements.forEach((element) => {
-      const accountName = querySelectText(element, ".sc-6e9df86d-0 .bTrgQn");
+      const account_name = querySelectText(element, ".sc-6e9df86d-0 .bTrgQn");
       const balance = querySelectNumber(element, ".sc-6e9df86d-0 .KjTSo");
 
-      const account: Account = {
-        accountName,
-        types: findAllAccountType(accountName),
+      const account: ScrapedAccountData = {
+        service_name: this.service_name,
+        account_name,
+        account_type: findAccountType(account_name),
         balance,
         // Include additional properties as needed.
-      };
+      } as ScrapedAccountData;
 
       accounts.push(account);
     });

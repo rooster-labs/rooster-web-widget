@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
 import ManageAccountSummaryData from "./components/manageAccountSummaryData/ManageAccountSummaryData.js";
 import "./App.css";
-import {
-  AccountSummaryData,
-} from "./utils/common/data/AccountSummaryData.js";
 import { useImmerReducer } from "use-immer";
 import { accountSummaryDataReducer } from "./components/manageAccountSummaryData/AccountSummaryDataReducer.js";
 import { NetworthChartView } from "./components/networthChart/NetworthChart.js";
@@ -17,13 +14,14 @@ import UserProviderView, {
   isUserSignedIn,
 } from "./components/userProvider/UserProvider.js";
 import { ls } from "./utils/common/data/localStorage.js";
+import { ScrapedAccountData } from "./utils/common/data/AccountSummaryExtractor.js";
 
 function App() {
   const [navState, setNavState] = useState<NavState>("user_sign_up");
   const [activeFinancialSite, setActiveFinancialSite] = useState<string>();
   const accountSummaryRedu = useImmerReducer(
     accountSummaryDataReducer,
-    {} as AccountSummaryData,
+    [] as ScrapedAccountData[],
   );
   const [accountSummaryData, dispatch] = accountSummaryRedu;
 
@@ -31,7 +29,7 @@ function App() {
     ls.getAccountSummaryData().then((data) => {
       dispatch({
         type: "setData",
-        businessName: "setData",
+        serviceName: "setData",
         data: data,
       });
     });
@@ -47,14 +45,14 @@ function App() {
   useEffect(() => {
     let activeSite: string | undefined = undefined;
 
-    getFinanceWebsite().then((site) => {
-      console.log("Get website", site);
-      setActiveFinancialSite(site);
-      activeSite = site;
-    }).then(() => {
-      isUserSignedIn()
-        .then((isSignedIn) => {
-          console.log("Sign in state and af state", {isSignedIn, activeFinancialSite})
+    getFinanceWebsite()
+      .then((site) => {
+        console.log("Get website", site);
+        setActiveFinancialSite(site);
+        activeSite = site;
+      })
+      .then(() => {
+        isUserSignedIn().then((isSignedIn) => {
           if (isSignedIn) {
             if (activeSite && activeSite != "") {
               setNavState("af_networth");
@@ -62,10 +60,10 @@ function App() {
               setNavState("networth");
             }
           } else {
-            setNavState("user_sign_up")
+            setNavState("user_sign_up");
           }
-        })
-    })
+        });
+      });
   }, []);
 
   function NavView() {

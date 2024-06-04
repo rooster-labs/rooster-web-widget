@@ -1,35 +1,37 @@
 import { querySelectNumber, querySelectText } from "../../../utils.js";
+import { findAccountType } from "../../common/data/accountClassifier.js";
+
 import {
-  Account,
-  findAllAccountType,
-} from "../../common/data/AccountSummaryData.js";
-import { AccountSummaryExtractor } from "../../common/data/AccountSummaryExtractor.js";
+  AccountSummaryExtractor,
+  ScrapedAccountData,
+} from "../../common/data/AccountSummaryExtractor.js";
 
 export class QuestradeAccountSummaryExtractor extends AccountSummaryExtractor {
-  name = "Questrade";
+  service_name = "Questrade";
   type = "Broker";
 
-  extractAccountDetails(): Account[] {
-    const accountSummaryList: Account[] = [];
+  extractAccountDetails(): ScrapedAccountData[] {
+    const accountSummaryList: ScrapedAccountData[] = [];
     const activeAccountListDiv = document.querySelector(
       ".active-accounts-list",
     );
     const accountRows = activeAccountListDiv?.querySelectorAll(".account-row");
 
     accountRows?.forEach((row) => {
-      const accountName = querySelectText(row, ".account-name");
+      const account_name = querySelectText(row, ".account-name");
       accountSummaryList.push({
-        accountName,
-        types: findAllAccountType(accountName),
+        service_name: this.service_name,
+        account_name,
+        account_type: findAccountType(account_name),
         cash: querySelectNumber(row, ".col-cash div:nth-child(2)"),
-        marketValue: querySelectNumber(
+        market_value: querySelectNumber(
           row,
           ".col-market-value div:nth-child(2)",
         ),
         balance: querySelectNumber(row, ".col-total-equity div:nth-child(2)"),
-      });
+      } as ScrapedAccountData);
     });
 
-    return accountSummaryList.filter((a) => a.accountName !== "All accounts");
+    return accountSummaryList.filter((a) => a.account_name !== "All accounts");
   }
 }

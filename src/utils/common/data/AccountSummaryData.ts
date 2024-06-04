@@ -1,117 +1,124 @@
-import { sumBy } from "lodash";
+import { groupBy, has, sumBy } from "lodash";
 import { filterOutFiller } from "../../../utils.js";
+import { ScrapedAccountData } from "./AccountSummaryExtractor.js";
+import { depositTypesClassifier } from "./accountClassifier.js";
 
-// Interface representing a collection of products indexed by a string key.
-export interface AccountSummaryData {
-  [key: string]: AccountSummary; // Key-value pairs where the key is a string and the value is a Product.
-}
+// // Interface representing a collection of products indexed by a string key.
+// export interface AccountSummaryData {
+//   [key: string]: AccountSummary; // Key-value pairs where the key is a string and the value is a Product.
+// }
 
-// Interface for the structure of a Business.
-export interface AccountSummary {
-  businessName: string; // The name of the Business.
-  accounts: Account[]; // An array of Account objects associated with the product.
-}
+// // Interface for the structure of a Business.
+// export interface AccountSummary {
+//   businessName: string; // The name of the Business.
+//   accounts: Account[]; // An array of Account objects associated with the product.
+// }
 
-// Interface for the structure of an Account.
-export interface Account {
-  accountName: string; // The name of the account.
-  types: Array<string>; // a list of types that help classify the kind of account
-  balance: number; // The current balance of the account.
-  pendingBalance?: number; // The pending balance of the account (optional).
-  cash?: number; // The cash amount in the account (optional).
-  marketValue?: number; // The market value of the account's holdings (optional).
-  transactions?: Array<object>; // An array of transactions associated with the account (optional, type can be specified more explicitly than `any` if known).
-}
+// // Interface for the structure of an Account.
+// export interface Account {
+//   accountName: string; // The name of the account.
+//   types: Array<string>; // a list of types that help classify the kind of account
+//   balance: number; // The current balance of the account.
+//   pendingBalance?: number; // The pending balance of the account (optional).
+//   cash?: number; // The cash amount in the account (optional).
+//   marketValue?: number; // The market value of the account's holdings (optional).
+//   transactions?: Array<object>; // An array of transactions associated with the account (optional, type can be specified more explicitly than `any` if known).
+// }
 
 // TODO: Create a deposit types Set. Then a seperate Map for type to classifier
 
-const depositClassifier = new Set([
-  "chequing",
-  "crypto",
-  "fhsa",
-  "rrsp",
-  "rsp",
-  "savings",
-  "tfsa",
-  "non-registered",
-]);
+// const depositClassifier = new Set([
+//   "chequing",
+//   "crypto",
+//   "fhsa",
+//   "rrsp",
+//   "rsp",
+//   "savings",
+//   "tfsa",
+//   "non-registered",
+// ]);
 
-const rrspClassifier = new Set(["rrsp", "rsp"]);
+// const rrspClassifier = new Set(["rrsp", "rsp"]);
 
-const creditClassifier = new Set([
-  "credit card",
-  "loan",
-  "line of credit",
-  "secured line of credit",
-  "visa",
-  "mastercard",
-  "american express",
-  "amex",
-]);
+// const creditClassifier = new Set([
+//   "credit card",
+//   "loan",
+//   "line of credit",
+//   "secured line of credit",
+//   "visa",
+//   "mastercard",
+//   "american express",
+//   "amex",
+// ]);
 
-const creditCardClassifier = new Set([
-  "visa",
-  "mastercard",
-  "american express",
-]);
+// const creditCardClassifier = new Set([
+//   "visa",
+//   "mastercard",
+//   "american express",
+// ]);
 
-export function findAllAccountType(accountName: string): string[] {
-  const lowerCaseName = accountName.toLowerCase();
-  const accountTypeList = new Array<string>();
-  let isDeposit = false;
+// export function findAllAccountType(accountName: string): string[] {
+//   const lowerCaseName = accountName.toLowerCase();
+//   const accountTypeList = new Array<string>();
+//   let isDeposit = false;
 
-  depositClassifier.forEach((c) => {
-    if (lowerCaseName.includes(c)) {
-      if (rrspClassifier.has(c)) {
-        accountTypeList.push("rrsp");
-      } else {
-        accountTypeList.push(c);
-      }
-      isDeposit = true;
-    }
-  });
+//   depositClassifier.forEach((c) => {
+//     if (lowerCaseName.includes(c)) {
+//       if (rrspClassifier.has(c)) {
+//         accountTypeList.push("rrsp");
+//       } else {
+//         accountTypeList.push(c);
+//       }
+//       isDeposit = true;
+//     }
+//   });
 
-  if (lowerCaseName == "cash") {
-    accountTypeList.push("chequing");
-    isDeposit = true;
-  }
+//   if (lowerCaseName == "cash") {
+//     accountTypeList.push("chequing");
+//     isDeposit = true;
+//   }
 
-  if (!isDeposit) {
-    creditClassifier.forEach((c) => {
-      if (lowerCaseName.includes(c)) {
-        if (creditCardClassifier.has(c)) {
-          accountTypeList.push("credit card");
-        } else {
-          accountTypeList.push(c);
-        }
-      }
-    });
-  }
+//   if (!isDeposit) {
+//     creditClassifier.forEach((c) => {
+//       if (lowerCaseName.includes(c)) {
+//         if (creditCardClassifier.has(c)) {
+//           accountTypeList.push("credit card");
+//         } else {
+//           accountTypeList.push(c);
+//         }
+//       }
+//     });
+//   }
 
-  return accountTypeList;
-}
+//   return accountTypeList;
+// }
 
 /**
  * Calculates the total net worth based on the provided products data.
  *
- * @param productData - An optional ProductsData object containing information about various products and their accounts.
+ * @param data - An optional ProductsData object containing information about various products and their accounts.
  * @returns The total net worth as a number. Returns 0 if no product data is provided.
  */
 export function calcNetWorth(
-  productData: AccountSummaryData | undefined,
+  data: ScrapedAccountData[] | undefined,
 ): number {
-  if (productData) {
-    const productList = Object.values(productData);
-    return sumBy(productList, (p) => sumBy(p.accounts, (a) => a.balance));
+  if (data) {
+    return sumBy(
+      data,
+      (a) =>
+        has(depositTypesClassifier, a.account_type ?? "") ? a.balance ?? 0 : 0,
+    );
   } else {
     return 0;
   }
 }
 
-function getAllDepositAccounts(accounts: Account[]): Account[] {
+function getAllDepositAccounts(
+  accounts: ScrapedAccountData[],
+): ScrapedAccountData[] {
   if (accounts) {
     return accounts.filter(
-      (a) => a.types.length > 0 && depositClassifier.has(a.types[0]),
+      (a) => has(depositTypesClassifier, a.account_type ?? ""),
     );
   } else {
     return [];
@@ -121,51 +128,42 @@ function getAllDepositAccounts(accounts: Account[]): Account[] {
 /**
  * Generates a summary data array from the product data, containing labels and values for each account.
  *
- * @param accountSummaryData - An optional ProductsData object containing information about various products and their accounts.
+ * @param data - An optional ProductsData object containing information about various products and their accounts.
  * @returns An array of objects, each with a 'name' and 'value' property, representing each account. Sorted by value in descending order.
  */
 export function getNetSummaryDataByAccount(
-  accountSummaryData: AccountSummaryData | undefined,
+  data: ScrapedAccountData[] | undefined,
 ): Array<{ name: string; value: number }> {
-  if (accountSummaryData) {
-    return Object.values(accountSummaryData)
-      .flatMap((p) =>
-        getAllDepositAccounts(p.accounts).map((a) => ({
-          name: createLabel(p.businessName, a.accountName, a.balance),
-          value: a.balance,
-        })),
-      )
-      .sort((a, b) => b.value - a.value);
+  if (data) {
+    return data.map((a) => {
+      return {
+        name: createLabel(
+          a.service_name ?? "",
+          a.account_name ?? "",
+          a.balance ?? 0,
+        ),
+        value: a.balance ?? 0,
+      };
+    });
   } else {
     return [];
   }
 }
 
 export function getNetSummaryDataByType(
-  accountSummaryData: AccountSummaryData | undefined,
+  data: ScrapedAccountData[] | undefined,
 ): Array<{ name: string; value: number }> {
-  if (accountSummaryData) {
-    const depositAccounts = Object.values(accountSummaryData).flatMap((p) =>
-      getAllDepositAccounts(p.accounts),
-    );
-    const depositTypeToValue = new Map<string, number>();
+  if (data) {
+    const accountsByType = groupBy(data, "account_type");
+    
+    return Object.entries(accountsByType).map((entry) => {
+      const total = sumBy(entry[1], (v) => v.balance ?? 0);
 
-    depositAccounts.forEach((a) => {
-      const types = a.types;
-      const t = types[0];
-      const v = depositTypeToValue.get(t);
-
-      if (v != undefined) {
-        depositTypeToValue.set(t, v + a.balance);
-      } else {
-        depositTypeToValue.set(t, a.balance);
-      }
+      return {
+        name: createLabel(entry[0].toUpperCase(), "", total),
+        value: total,
+      };
     });
-
-    return Array.from(depositTypeToValue).map(([n, value]) => ({
-      name: createLabel(n.toUpperCase(), "", value),
-      value,
-    }));
   } else {
     return [];
   }
