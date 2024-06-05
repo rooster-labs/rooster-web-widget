@@ -1,11 +1,22 @@
 import { AccountData, UserTableType } from "../apis/accountSummaryService.js";
 import { ScrapedAccountData } from "./accountSummary/AccountSummaryExtractor.js";
+import { AppSettings } from "./appSettings/AppSettings.js";
 
 const USER_INFO = "user_info";
 
 const ACCOUNT_SUMMARY_DATA = "account_summary_data";
 
+const APP_SETTINGS = "app_settings";
+
 const CLS = chrome.storage.local;
+
+async function getAppSettings(): Promise<AppSettings> {
+  return await CLS.get([APP_SETTINGS]).then((res) => res[APP_SETTINGS]);
+}
+
+async function setAppSettings(newAppSettings: AppSettings) {
+  return CLS.set({ [APP_SETTINGS]: newAppSettings });
+}
 
 async function getUserInfo(): Promise<UserTableType> {
   return await CLS.get([USER_INFO]).then((res) => res[USER_INFO]);
@@ -51,6 +62,8 @@ async function setAccountData(
 }
 
 const ls = {
+  getAppSettings,
+  setAppSettings,
   getUserInfo,
   setUserInfo,
   getAccountSummaryData,

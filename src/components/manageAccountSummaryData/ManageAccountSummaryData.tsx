@@ -14,7 +14,7 @@ function ManageAccountSummaryData({
   const [accountSummaryData, dispatch] = accountSummaryReducer;
 
   useEffect(() => {
-    console.log("manage Account", accountSummaryData);
+    console.log("Manage Account", accountSummaryData);
     ls.setAccountData(accountSummaryData);
   }, [accountSummaryData]);
 
