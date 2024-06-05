@@ -1,5 +1,5 @@
-import { findAccountType } from "../../utils/common/data/accountClassifier.js";
-import { ScrapedAccountData } from "../../utils/common/data/AccountSummaryExtractor.js";
+import { findAccountType } from "../../utils/common/data/accountSummary/accountClassifier.js";
+import { ScrapedAccountData } from "../../utils/common/data/accountSummary/AccountSummaryExtractor.js";
 
 export type ManageAccountsActionTypes =
   | "addAccountSummary"

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { ManageAccountSummaryList } from "./AccountSummaryList.js";
 import { ManageAccountsAction } from "./AccountSummaryDataReducer.js";
 import { ls } from "../../utils/common/data/localStorage.js";
-import { ScrapedAccountData } from "../../utils/common/data/AccountSummaryExtractor.js";
+import { ScrapedAccountData } from "../../utils/common/data/accountSummary/AccountSummaryExtractor.js";
 
 interface IManageAccountSumDataProp {
   reducer: [ScrapedAccountData[], React.Dispatch<ManageAccountsAction>];

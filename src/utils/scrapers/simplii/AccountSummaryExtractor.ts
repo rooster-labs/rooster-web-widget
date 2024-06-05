@@ -1,12 +1,12 @@
 import {
   AccountSummaryExtractor,
   ScrapedAccountData,
-} from "../../common/data/AccountSummaryExtractor.js";
+} from "../../common/data/accountSummary/AccountSummaryExtractor.js";
 import { querySelectNumber, querySelectText } from "../../../utils.js";
 import {
   findAccountType,
   isInvestmentAccount,
-} from "../../common/data/accountClassifier.js";
+} from "../../common/data/accountSummary/accountClassifier.js";
 
 export class SimpliiAccountSummaryExtractor extends AccountSummaryExtractor {
   service_name = "Simplii";

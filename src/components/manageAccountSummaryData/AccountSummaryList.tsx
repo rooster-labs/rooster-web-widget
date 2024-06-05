@@ -2,7 +2,7 @@ import { useState } from "react";
 import { AccountsList } from "./AccountsList.js";
 import { PlusIcon } from "./ManageAccountSummaryIcons.js";
 import { groupBy } from "lodash";
-import { ScrapedAccountData } from "../../utils/common/data/AccountSummaryExtractor.js";
+import { ScrapedAccountData } from "../../utils/common/data/accountSummary/AccountSummaryExtractor.js";
 
 // Function Types
 export type AddAccountSumFunction = (businessName: string) => void;

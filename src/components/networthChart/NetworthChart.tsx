@@ -13,9 +13,9 @@ import {
   calcNetWorth,
   getNetSummaryDataByAccount,
   getNetSummaryDataByType,
-} from "../../utils/common/data/accountSummaryUtils.js";
+} from "../../utils/common/data/accountSummary/accountSummaryUtils.js";
 import { Updater, useImmer } from "use-immer";
-import { ScrapedAccountData } from "../../utils/common/data/AccountSummaryExtractor.js";
+import { ScrapedAccountData } from "../../utils/common/data/accountSummary/AccountSummaryExtractor.js";
 
 interface NetWorthChartViewProps {
   data: ScrapedAccountData[];

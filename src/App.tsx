@@ -14,7 +14,7 @@ import UserProviderView, {
   isUserSignedIn,
 } from "./components/userProvider/UserProvider.js";
 import { ls } from "./utils/common/data/localStorage.js";
-import { ScrapedAccountData } from "./utils/common/data/AccountSummaryExtractor.js";
+import { ScrapedAccountData } from "./utils/common/data/accountSummary/AccountSummaryExtractor.js";
 
 function App() {
   const [navState, setNavState] = useState<NavState>("user_sign_up");

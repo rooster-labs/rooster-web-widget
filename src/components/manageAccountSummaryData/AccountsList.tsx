@@ -9,7 +9,7 @@ import {
   DeleteAccountFunction,
   EditAccountFunction,
 } from "./AccountSummaryList.js";
-import { ScrapedAccountData } from "../../utils/common/data/AccountSummaryExtractor.js";
+import { ScrapedAccountData } from "../../utils/common/data/accountSummary/AccountSummaryExtractor.js";
 
 interface AddAccountProps {
   onAddAccount: AddAccountFunction;
@@ -119,7 +119,9 @@ function ManageAccount({
       </label>
       <button
         className="btn btn-outline btn-error btn-xs items-center"
-        onClick={() => onDeleteAccount(serviceName, account.account_name ?? "N/A")}
+        onClick={() =>
+          onDeleteAccount(serviceName, account.account_name ?? "N/A")
+        }
       >
         <TrashIcon />
       </button>

@@ -1,5 +1,5 @@
 import { groupBy, has, sumBy } from "lodash";
-import { filterOutFiller } from "../../../utils.js";
+import { filterOutFiller } from "../../../../utils.js";
 import { ScrapedAccountData } from "./AccountSummaryExtractor.js";
 import { depositTypesClassifier } from "./accountClassifier.js";
 
@@ -69,7 +69,7 @@ export function getNetSummaryDataByType(
 ): Array<{ name: string; value: number }> {
   if (data) {
     const accountsByType = groupBy(data, "account_type");
-    
+
     return Object.entries(accountsByType).map((entry) => {
       const total = sumBy(entry[1], (v) => v.balance ?? 0);
 

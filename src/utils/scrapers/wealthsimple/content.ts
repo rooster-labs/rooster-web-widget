@@ -1,9 +1,9 @@
 import {
   AccountSummaryExtractor,
   ScrapedAccountData,
-} from "../../common/data/AccountSummaryExtractor.js";
+} from "../../common/data/accountSummary/AccountSummaryExtractor.js";
 import { querySelectNumber, querySelectText } from "../../../utils.js";
-import { findAccountType } from "../../common/data/accountClassifier.js";
+import { findAccountType } from "../../common/data/accountSummary/accountClassifier.js";
 
 class WealthSimpleAccountSummaryExtractor extends AccountSummaryExtractor {
   service_name = "WealthSimple";

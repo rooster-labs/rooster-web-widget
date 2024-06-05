@@ -1,10 +1,10 @@
 import { querySelectNumber, querySelectText } from "../../../utils.js";
-import { findAccountType } from "../../common/data/accountClassifier.js";
+import { findAccountType } from "../../common/data/accountSummary/accountClassifier.js";
 
 import {
   AccountSummaryExtractor,
   ScrapedAccountData,
-} from "../../common/data/AccountSummaryExtractor.js";
+} from "../../common/data/accountSummary/AccountSummaryExtractor.js";
 
 export class QuestradeAccountSummaryExtractor extends AccountSummaryExtractor {
   service_name = "Questrade";

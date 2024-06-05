@@ -1,5 +1,5 @@
-import { AccountData } from "../apis/accountSummaryService.js";
-import { ls } from "./localStorage.js";
+import { AccountData } from "../../apis/accountSummaryService.js";
+import { ls } from "../localStorage.js";
 
 export type ScrapedAccountData = Omit<AccountData, "account_id" | "created_at">;
 
@@ -23,7 +23,9 @@ export abstract class AccountSummaryExtractor {
     if (isValid) {
       return cleanedData;
     } else {
-      console.error(`${this.service_name} Summary Page data is not valid`, { data });
+      console.error(`${this.service_name} Summary Page data is not valid`, {
+        data,
+      });
       return [];
     }
   }
@@ -31,7 +33,7 @@ export abstract class AccountSummaryExtractor {
   onLoad(timeout: number = 4000) {
     setTimeout(() => {
       const accountSummary = this.extractAccountDetails();
-      const cleanAccountSummary = this.cleanAndValidateData(accountSummary)
+      const cleanAccountSummary = this.cleanAndValidateData(accountSummary);
       ls.updateAccountDataForService(cleanAccountSummary);
       console.log(`${this.service_name} Summary Page`, { cleanAccountSummary });
     }, timeout);

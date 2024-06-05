@@ -1,5 +1,5 @@
 import { AccountData, UserTableType } from "../apis/accountSummaryService.js";
-import { ScrapedAccountData } from "./AccountSummaryExtractor.js";
+import { ScrapedAccountData } from "./accountSummary/AccountSummaryExtractor.js";
 
 const USER_INFO = "user_info";
 
@@ -40,7 +40,7 @@ async function updateAccountDataForService(scrapedData: ScrapedAccountData[]) {
   const oldData = await getAccountSummaryData();
   setAccountData(updateAccountDataWithScraped(scrapedData, oldData));
 }
-  
+
 async function setAccountData(
   accountData: ScrapedAccountData[],
 ): Promise<void> {
@@ -56,6 +56,6 @@ const ls = {
   getAccountSummaryData,
   updateAccountDataForService,
   setAccountData,
-};
+} as const;
 
 export { ls };
