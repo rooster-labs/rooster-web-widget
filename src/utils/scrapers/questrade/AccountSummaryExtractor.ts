@@ -29,6 +29,7 @@ export class QuestradeAccountSummaryExtractor extends AccountSummaryExtractor {
           ".col-market-value div:nth-child(2)",
         ),
         balance: querySelectNumber(row, ".col-total-equity div:nth-child(2)"),
+        is_investment: true
       } as ScrapedAccountData);
     });
 

@@ -3,7 +3,7 @@ import {
   ScrapedAccountData,
 } from "../../common/data/accountSummary/AccountSummaryExtractor.js";
 import { querySelectNumber, querySelectText } from "../../../utils.js";
-import { findAccountType } from "../../common/data/accountSummary/accountClassifier.js";
+import { findAccountType, isInvestmentAccount } from "../../common/data/accountSummary/accountClassifier.js";
 
 class WealthSimpleAccountSummaryExtractor extends AccountSummaryExtractor {
   service_name = "WealthSimple";
@@ -23,6 +23,7 @@ class WealthSimpleAccountSummaryExtractor extends AccountSummaryExtractor {
         account_name,
         account_type: findAccountType(account_name),
         balance,
+        is_investment: isInvestmentAccount(account_name)
         // Include additional properties as needed.
       } as ScrapedAccountData;
 

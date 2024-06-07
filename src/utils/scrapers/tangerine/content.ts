@@ -3,7 +3,7 @@ import {
   ScrapedAccountData,
 } from "../../common/data/accountSummary/AccountSummaryExtractor.js";
 import { querySelectNumber, querySelectText } from "../../../utils.js";
-import { findAccountType } from "../../common/data/accountSummary/accountClassifier.js";
+import { findAccountType, isInvestmentAccount } from "../../common/data/accountSummary/accountClassifier.js";
 
 class TangerineAccountSummaryExtractor extends AccountSummaryExtractor {
   service_name = "Tangerine";
@@ -27,6 +27,7 @@ class TangerineAccountSummaryExtractor extends AccountSummaryExtractor {
         account_name, // Directly using accountName
         account_type: findAccountType(account_name),
         balance,
+        is_investment: isInvestmentAccount(account_name)
         // Additional properties can be included as needed.
       } as ScrapedAccountData;
 
