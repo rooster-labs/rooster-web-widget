@@ -16,7 +16,7 @@ function createLabel(
   accountName: string,
   value: number,
 ): string {
-  return `${serviceName} ${filterOutFiller(accountName)} - $${value}`;
+  return `${serviceName} ${filterOutFiller(accountName)} - $${value.toFixed(2)}`;
 }
 
 /**
