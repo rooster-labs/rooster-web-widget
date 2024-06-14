@@ -164,6 +164,14 @@ export type Database = {
           user_id: string | null
         }[]
       }
+      get_account_id_from_account_name: {
+        Args: {
+          p_user_id: string
+          p_service_name: string
+          p_account_name: string
+        }
+        Returns: string
+      }
       latest_account_value: {
         Args: {
           p_user_id: string
@@ -177,6 +185,34 @@ export type Database = {
           market_value: number | null
           net_deposit: number | null
           pending_balance: number | null
+        }[]
+      }
+      log_account_data: {
+        Args: {
+          p_user_id: string
+          p_service_name: string
+          p_account_name: string
+          p_account_type: string
+          p_is_investment: boolean
+          p_balance: number
+          p_pending_balance: number
+          p_cash: number
+          p_market_value: number
+          p_net_deposit: number
+        }
+        Returns: {
+          account_id: string | null
+          account_name: string | null
+          account_type: string | null
+          balance: number | null
+          cash: number | null
+          created_at: string | null
+          is_investment: boolean | null
+          market_value: number | null
+          net_deposit: number | null
+          pending_balance: number | null
+          service_name: string | null
+          user_id: string | null
         }[]
       }
       user_table_has: {

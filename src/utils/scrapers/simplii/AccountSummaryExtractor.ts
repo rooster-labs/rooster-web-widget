@@ -23,6 +23,7 @@ export class SimpliiAccountSummaryExtractor extends AccountSummaryExtractor {
         const accountName = querySelectText(row, ".account-name");
         if (accountName != "") {
           accountSummaryList.push({
+            user_id: this.user_id,
             service_name: this.service_name,
             account_name: querySelectText(row, ".account-name"),
             account_type: findAccountType(accountName),
@@ -32,7 +33,6 @@ export class SimpliiAccountSummaryExtractor extends AccountSummaryExtractor {
             market_value: null,
             net_deposit: null,
             pending_balance: null,
-            user_id: null,
           });
         }
       })

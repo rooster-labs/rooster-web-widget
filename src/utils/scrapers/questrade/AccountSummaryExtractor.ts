@@ -20,6 +20,7 @@ export class QuestradeAccountSummaryExtractor extends AccountSummaryExtractor {
     accountRows?.forEach((row) => {
       const account_name = querySelectText(row, ".account-name");
       accountSummaryList.push({
+        user_id: this.user_id,
         service_name: this.service_name,
         account_name,
         account_type: findAccountType(account_name),

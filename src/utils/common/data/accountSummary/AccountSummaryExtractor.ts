@@ -1,10 +1,37 @@
-import { AccountData } from "../../apis/accountSummaryService.js";
+import {
+  AccountData,
+  accountDataToLogAccountArgs,
+  accountSummaryService,
+} from "../../apis/accountSummaryService.js";
 import { ls } from "../localStorage.js";
 
-export type ScrapedAccountData = Omit<AccountData, "account_id" | "created_at">;
+export type ScrapedAccountData = Omit<
+  AccountData,
+  "account_id" | "created_at"
+  >;
+
+async function logScrapedAccountData(data: ScrapedAccountData[]) {
+
+  data.forEach((a) => {
+    const logAccountArgs = accountDataToLogAccountArgs(a as AccountData);
+    accountSummaryService.rpc("log_account_data", logAccountArgs).then((res) =>
+      console.log("Logging accountData:", res.data)
+    );
+  });
+}
 
 export abstract class AccountSummaryExtractor {
   abstract service_name: string;
+  user_id: string = "";
+
+  constructor() {
+    this.initUserId();
+  }
+
+  async initUserId() {
+    const userInfo = await ls.getUserInfo();
+    this.user_id = userInfo.user_id;
+  }
 
   abstract extractAccountDetails(): ScrapedAccountData[];
 
@@ -35,6 +62,7 @@ export abstract class AccountSummaryExtractor {
       const accountSummary = this.extractAccountDetails();
       const cleanAccountSummary = this.cleanAndValidateData(accountSummary);
       ls.updateAccountDataForService(cleanAccountSummary);
+      logScrapedAccountData(cleanAccountSummary)
       console.log(`${this.service_name} Summary Page`, { cleanAccountSummary });
     }, timeout);
   }

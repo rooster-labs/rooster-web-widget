@@ -19,6 +19,7 @@ class WealthSimpleAccountSummaryExtractor extends AccountSummaryExtractor {
       const balance = querySelectNumber(element, ".sc-6e9df86d-0 .KjTSo");
 
       const account: ScrapedAccountData = {
+        user_id: this.user_id,
         service_name: this.service_name,
         account_name,
         account_type: findAccountType(account_name),

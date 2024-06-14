@@ -23,6 +23,7 @@ class TangerineAccountSummaryExtractor extends AccountSummaryExtractor {
       );
 
       const account: ScrapedAccountData = {
+        user_id: this.user_id,
         service_name: this.service_name,
         account_name, // Directly using accountName
         account_type: findAccountType(account_name),
