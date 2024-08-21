@@ -4,6 +4,12 @@ This is a chrome extension made to help keep track of your financial data. This 
 
 The project is a chrome manifest v3 extension built using React.js with vite and CRXJS, written in Typescript.
 
+# Demo
+## Networth
+![image](https://github.com/user-attachments/assets/7fa7a487-47ab-4cb5-a386-2d5ae65c1420)
+## Manage accounts
+![image](https://github.com/user-attachments/assets/4e8a0392-d499-4692-9cea-f40597d9da1a)
+
 # Getting Started
 
 1. `npm i` - install the dependencies
